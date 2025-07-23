@@ -8,7 +8,8 @@ SRC += $(addprefix $(MAINDIR), $(addsuffix .c, $(MAIN)))
 override MAIN := \
 	main \
 
+
 SRC += $(addprefix $(PARSERDIR), $(addsuffix .c, $(PARSERSRC)))
 
-override PARSERDIR := \
+override PARSERSRC := \
 	parsing \

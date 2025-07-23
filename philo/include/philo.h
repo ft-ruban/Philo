@@ -1,11 +1,11 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+#include "parsing.h"
 #include <stdio.h>
 //#include <unistd.h>
 #include <stdbool.h>
-# define RETURN_ERROR 1
-# define RETURN_SUCCESS 0
+
 
 typedef struct s_forks
 {
@@ -14,8 +14,10 @@ typedef struct s_forks
     struct s_forks  *next;
 }   t_forks;
 
-// typedef struct s_utils
-// {
+typedef struct s_utils
+{
+    size_t nbr_philo;
+    size_t time_to_die;
+} t_utils;
 
-// }
 #endif
