@@ -8,7 +8,7 @@ MAKE            := make
 RM              := rm -f
 RM_DIR          := rm -rf
 
-CFLAGS          := -Wall -Wextra -Werror -g3
+CFLAGS          := -Wall -Wextra -Werror
 CPPFLAGS		:= -MMD -MP -I include
 INC             := -I./include
 INCLUDE         := include/
