@@ -2,20 +2,23 @@
 #include <sys/time.h> //gettingtimeofdayneedit
 #include <time.h> //time_t type need it
 //parsing need between 1 and n philo also check if optional arg
-
-
+#include <stdlib.h> //malloc
+#include "parsing.h"
 
 int main(int argc, char *argv[])
 {
-    //time_t seconds;
-    // struct timeval tv;
+    t_settings *set;
 
-    // gettimeofday(&tv, NULL);
-    // printf("Seconds since Epoch: %ld\n", tv.tv_sec);
-    // printf("Microseconds part: %ld\n", tv.tv_usec);
-    if (parsing(argc, argv))
+    set = malloc(sizeof (t_settings));
+    if(!set)
+        return (EXIT_FAILURE);
+    if (parsing(argc, argv, set))
+    {
         printf("PARSING ERROR\n");
+        return(RETURN_ERROR);
+    }
     else
         printf("PARSING SUCCESS\n");
+    free(set);
     return (0);
 }

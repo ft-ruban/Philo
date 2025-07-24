@@ -12,4 +12,5 @@ override MAIN := \
 SRC += $(addprefix $(PARSERDIR), $(addsuffix .c, $(PARSERSRC)))
 
 override PARSERSRC := \
+	parsing_utils \
 	parsing \

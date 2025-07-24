@@ -1,11 +1,9 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-#include "parsing.h"
 #include <stdio.h>
 //#include <unistd.h>
 #include <stdbool.h>
-
 
 typedef struct s_forks
 {
@@ -14,10 +12,23 @@ typedef struct s_forks
     struct s_forks  *next;
 }   t_forks;
 
-typedef struct s_utils
+typedef struct s_philo
 {
-    size_t nbr_philo;
-    size_t time_to_die;
-} t_utils;
+
+    size_t id;
+    size_t meals_eaten;
+    struct s_philo *next;
+} t_philo;
+
+typedef struct s_settings
+{
+    long nbr_philo;
+    long t_die;
+    long t_eat;
+    long t_sleep;
+    long max_meal;
+    bool limit_meal;
+    bool death;
+} t_settings;
 
 #endif
