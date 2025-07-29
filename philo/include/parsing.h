@@ -3,6 +3,7 @@
 
 #include "philo.h"
 #include "stdbool.h"
+#include <sys/time.h> //gettingtimeofdayneedit 
 
 # define RETURN_ERROR 1
 # define RETURN_SUCCESS 0

@@ -2,7 +2,6 @@
 #include "../include/parsing.h"
 #include <unistd.h> //write
 #include <stdlib.h>
-#include <limits.h>
 
 // int convert(char *argv[])
 // {
@@ -20,6 +19,8 @@
 // } t_settings;
 
 //TODO parse in case of overflow also
+
+
 static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 {
 	set->death = false;
@@ -78,16 +79,10 @@ int	parsing(int argc, char *argv[], t_settings *set)
 {
 	int	return_value;
 
-	return_value = 0;
 	if (argc > 6 || argc < 5)
 		return (error_msg(set, INVALID_ARGC));
 	return_value = convert_argv_to_struct_utils(argv, set);
 	if (return_value)
 		return (error_msg(set, return_value));
-    printf("longmax = %ld\n",LONG_MAX);
-	printf("nbr_philo = %ld\n", set->nbr_philo);
-	printf("t_die = %ld\n", set->t_die);
-	printf("t_eat = %ld\n", set->t_eat);
-	printf("t_sleep = %ld\n", set->t_sleep);
 	return (RETURN_SUCCESS);
 }
