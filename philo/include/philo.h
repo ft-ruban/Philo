@@ -4,11 +4,15 @@
 #include <stdio.h>
 //#include <unistd.h>
 #include <stdbool.h>
+#include <pthread.h>
+
+# define EXIT_SUCCESS 0
+# define EXIT_FAILURE 1
 
 typedef struct s_forks
 {
+    size_t      id;
     bool        available;
-    size_t      emplacement;
     struct s_forks  *next;
 }   t_forks;
 
@@ -17,7 +21,11 @@ typedef struct s_philo
 
     size_t id;
     size_t meals_eaten;
+    long   t_alive;
+    struct s_forks *left;
+    struct s_forks *right;
     struct s_philo *next;
+    pthread_t thread_id;
 } t_philo;
 
 typedef struct s_settings
@@ -26,9 +34,19 @@ typedef struct s_settings
     long t_die;
     long t_eat;
     long t_sleep;
-    long max_meal;
+    long max_meal; //could place -1 to set at NONE instead of bool
     bool limit_meal;
     bool death;
 } t_settings;
+
+//debug.c
+void print_id_related_forks(t_philo *philo, t_forks *forks);
+void print_content_set(t_settings *set);
+
+//utils.c
+void create_philo(long nbr_philo, t_philo *philo, t_forks *forks);
+int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_value);
+
+
 
 #endif
