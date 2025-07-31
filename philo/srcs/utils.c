@@ -2,18 +2,19 @@
 #include "../include/philo.h"
 #include "stdlib.h"
 
-void create_philo(long nbr_philo, t_philo *philo, t_forks *forks)
+void create_philo(t_settings *settings, t_philo *philo, t_forks *forks)
 {
     long i;
 
     i = 0;
-    while(i < nbr_philo - 1) //faire un tour de plus special car fin
+    while(i < settings->nbr_philo - 1) //faire un tour de plus special car fin
     {
         philo[i].id = i + 1;
         philo[i].meals_eaten = 0;
         philo[i].left = &forks[i];
         philo[i].right = &forks[i + 1];
         philo[i].next = &philo[i + 1];
+        philo[i].set = settings;
         forks[i].id = i + 1;
         forks[i].available = true;
         forks[i].next = &forks[i + 1];
@@ -24,6 +25,7 @@ void create_philo(long nbr_philo, t_philo *philo, t_forks *forks)
     philo[i].left = &forks[i];
     philo[i].right = &forks[0];
     philo[i].next = NULL;//&philo[0];
+    philo[i].set = settings;
     forks[i].id = i + 1;
     forks[i].available = true;
     forks[i].next = NULL;//&forks[0];

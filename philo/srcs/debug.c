@@ -8,6 +8,7 @@ void print_id_related_forks(t_philo *philo, t_forks *forks)
         printf("philo_id : %zu\n",philo->id);
         printf("fork_left = : %zu\n",philo->left->id);
         printf("fork_right = : %zu\n",philo->right->id);
+        //printf("test = %ld\n",philo->set->nbr_philo);
         philo = philo->next;
     }
     while(forks)
@@ -15,6 +16,7 @@ void print_id_related_forks(t_philo *philo, t_forks *forks)
         printf("fork_id : %zu\n",forks->id);
         forks = forks->next;
     }
+
 }
 
 void print_content_set(t_settings *set)

@@ -25,6 +25,7 @@ typedef struct s_philo
     struct s_forks *left;
     struct s_forks *right;
     struct s_philo *next;
+    struct s_settings *set;
     pthread_t thread_id;
 } t_philo;
 
@@ -44,7 +45,7 @@ void print_id_related_forks(t_philo *philo, t_forks *forks);
 void print_content_set(t_settings *set);
 
 //utils.c
-void create_philo(long nbr_philo, t_philo *philo, t_forks *forks);
+void create_philo(t_settings *settings, t_philo *philo, t_forks *forks);
 int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_value);
 
 
