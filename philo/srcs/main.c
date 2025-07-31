@@ -37,21 +37,16 @@
 
 static void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
 {
-    time_t to_sub_unit;
-    time_t to_sub_micro;
     struct timeval tv;
-    long result;
+
 
     gettimeofday(&tv, NULL);
-    to_sub_unit = tv.tv_sec;
-    to_sub_micro = tv.tv_usec;
-    printf("Microseconds part: %ld\n", tv.tv_usec);
-    usleep(5005000);
+    set->subunit = tv.tv_sec;
+    set->subusec = tv.tv_usec;
+    usleep(5006000);
     gettimeofday(&tv, NULL);
-    printf("time : %ld + %ld\n", tv.tv_sec - to_sub_unit, tv.tv_usec - to_sub_micro);
-    result = (tv.tv_sec - to_sub_unit) * 1000000 + (tv.tv_usec - to_sub_micro);
-    printf("result = : %ld \n",result / 1000);
-    //printf("milisecond : %ld \n", (tv.tv_sec - to_sub_unit) * 1000  + (tv.tv_usec - to_sub_micro) / 1000);
+    set->time_passed = (tv.tv_sec -  set->subunit) * 1000000 + (tv.tv_usec - set->subusec);
+    printf("result = : %ld \n",set->time_passed / 1000);
     set = NULL;
     philo = NULL;
     forks = NULL;

@@ -35,6 +35,9 @@ typedef struct s_settings
     long t_die;
     long t_eat;
     long t_sleep;
+    time_t subunit;
+    time_t subusec;
+    time_t time_passed;
     long max_meal; //could place -1 to set at NONE instead of bool
     bool limit_meal;
     bool death;
