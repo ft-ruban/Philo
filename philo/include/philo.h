@@ -9,16 +9,26 @@
 # define EXIT_SUCCESS 0
 # define EXIT_FAILURE 1
 
+typedef enum e_activity_philosophers
+{
+  TAKEN_A_FORK,
+  EATING,
+  SLEEPING,
+  THINKING,
+  DIED,
+} t_activity_philosophers;
+
+
 typedef struct s_forks
 {
-    size_t      id;
-    bool        available;
+    size_t          id;
+    bool            available;
+    pthread_mutex_t mutex;
     struct s_forks  *next;
 }   t_forks;
 
 typedef struct s_philo
 {
-
     size_t id;
     size_t meals_eaten;
     long   t_alive;
@@ -40,6 +50,8 @@ typedef struct s_settings
     time_t time_passed;
     long max_meal; //could place -1 to set at NONE instead of bool
     bool limit_meal;
+    pthread_mutex_t death_mutex;
+    pthread_mutex_t print_mutex;
     bool death;
 } t_settings;
 
