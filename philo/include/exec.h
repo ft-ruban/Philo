@@ -3,9 +3,18 @@
 
 #include "philo.h"
 
+typedef enum e_msg_to_print
+{
+  IS_THINKING,
+  IS_TAKING_FORK,
+  IS_EATING,
+  IS_SLEEPING,
+} t_msg_to_print;
+
 //philo_utils.c
 void join_thread(t_philo *philo);
 void create_thread(t_philo *philo);
+void print_msg_routine(t_philo *philo, size_t cases);
 
 //philo.c
 void* routine_odd(void *arg);
