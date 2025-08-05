@@ -27,13 +27,13 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	set->nbr_philo = ft_atol(argv[1]);
 	if (set->nbr_philo < 1 || set->nbr_philo > 200)
 		return (INVALID_PHILO);
-	set->t_die = ft_atol(argv[2]);
+	set->t_die = (ft_atol(argv[2]) * 1000);
 	if (set->t_die < 0)
 		return (INVALID_DIE);
-	set->t_eat = ft_atol(argv[3]);
+	set->t_eat = (ft_atol(argv[3])  * 1000);
 	if (set->t_eat < 0)
 		return (INVALID_EAT);
-	set->t_sleep = ft_atol(argv[4]);
+	set->t_sleep = (ft_atol(argv[4]) * 1000);
 	if (set->t_sleep < 0)
 		return (INVALID_SLEEP);
 	if (argv[5])
