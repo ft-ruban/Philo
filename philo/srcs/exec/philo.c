@@ -1,6 +1,6 @@
 
 #include <sys/time.h> //gettingtimeofdayneedit
-#include "../include/philo.h"
+#include "exec.h"
 #include <unistd.h> //usleep
 
 void* routine_odd(void *arg)

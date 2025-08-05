@@ -3,6 +3,7 @@
 #include <time.h> //time_t type need it
 #include <stdlib.h> //malloc
 #include "parsing.h"
+#include "exec.h"
 #include <pthread.h> //phtread_t
 
 //pot soucis si que un philo 
