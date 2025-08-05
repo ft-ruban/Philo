@@ -21,4 +21,5 @@ override PARSERSRC := \
 SRC += $(addprefix $(EXECDIR), $(addsuffix .c, $(EXECSRC)))
 
 override EXECSRC := \
-	philo 
+	philo \
+	philo_utils

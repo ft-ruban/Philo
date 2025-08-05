@@ -112,34 +112,6 @@ void* routine_even(void *arg)
     // pthread_mutex_lock(&philo->set->print_mutex);
     // pthread_mutex_unlock(&philo->set->print_mutex);
 
-static void create_thread(t_philo *philo)
-{
-    while(philo)
-    {
-        if(pthread_create(&philo->thread_id, NULL, &routine_even, philo) != 0)
-            return;
-        philo = philo->next;
-        //usleep(5000);
-        if(philo)
-        {
-            if(pthread_create(&philo->thread_id, NULL, &routine_odd, philo) != 0)
-                return;
-            philo = philo->next;
-            //usleep(5000);
-        }
-        
-    }
-}
-static void join_thread(t_philo *philo)
-{
-    while(philo)
-    {
-        pthread_join(philo->thread_id, NULL); //protect?
-        philo = philo->next;
-    }
-    
-}
-
 void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
 {
     struct timeval tv;
