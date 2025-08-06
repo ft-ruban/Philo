@@ -3,36 +3,41 @@
 #include "exec.h"
 #include <unistd.h> //usleep
 
+void routine_take_fork(t_philo *philo, bool right)
+{
+        if(right)
+        {
+            pthread_mutex_lock(&philo->right->mutex);
+            philo->right->available = false;
+            print_msg_routine(philo, IS_TAKING_FORK);
+        }
+        else
+        {
+            pthread_mutex_lock(&philo->left->mutex);
+            philo->left->available = false;
+            print_msg_routine(philo, IS_TAKING_FORK);
+        }
+}
 void* routine_odd(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
     //struct timeval tv;
     //TODO mettre le t_eat /2 directement dans la struct pour eviter calcul redondant
     usleep(250);//moitie wait la moitie de manger pour creer un decalage
-    while(!philo->set->death)
+    while(!philo->set->death && philo->meals_eaten != philo->set->max_meal)
     {
         print_msg_routine(philo, IS_THINKING);
         usleep(250);
-        pthread_mutex_lock(&philo->right->mutex);
-        philo->right->available = false;
-        print_msg_routine(philo, IS_TAKING_FORK);
-        pthread_mutex_lock(&philo->left->mutex);
-        philo->left->available = false;
-        print_msg_routine(philo, IS_TAKING_FORK);
+        routine_take_fork(philo, true);
+        routine_take_fork(philo, false);
         print_msg_routine(philo, IS_EATING);
         usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
-        //reset time eat
         print_msg_routine(philo, IS_SLEEPING);
         usleep(philo->set->t_sleep);   
-        //TODO else if didnt ate in time
-        //kill
-        // gettimeofday(&tv, NULL);
-        // philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
-        // printf("[%ld] %ld died\n",philo->set->time_passed / 1000, philo->id);
     }
     return(0);
 }
@@ -40,30 +45,26 @@ void* routine_odd(void *arg)
 void* routine_even(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
-    while(!philo->set->death)
+    while(!philo->set->death && philo->meals_eaten != philo->set->max_meal)
     {
         print_msg_routine(philo, IS_THINKING);
         usleep(250);
-        pthread_mutex_lock(&philo->left->mutex);
-        philo->left->available = false;
-        print_msg_routine(philo, IS_TAKING_FORK);
-        pthread_mutex_lock(&philo->right->mutex);
-        philo->right->available = false;
-        print_msg_routine(philo, IS_TAKING_FORK);
+        routine_take_fork(philo, false);
+        if(philo->right->id == philo->left->id)
+        {
+            while(!philo->set->death)
+                print_msg_routine(philo, WAIT);
+            break;
+        }
+        routine_take_fork(philo, true);
         print_msg_routine(philo, IS_EATING);
         usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
-        //reset time eat
         print_msg_routine(philo, IS_SLEEPING);
         usleep(philo->set->t_sleep);    
-            //TODO else if didnt ate in time
-            //kill
-            // gettimeofday(&tv, NULL);
-            // philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
-            // printf("[%ld] %ld died\n",philo->set->time_passed / 1000, philo->id);
         }
     return(0);
 }

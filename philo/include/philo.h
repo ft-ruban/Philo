@@ -16,6 +16,7 @@ typedef enum e_activity_philosophers
   SLEEPING,
   THINKING,
   DIED,
+  WAIT
 } t_activity_philosophers;
 
 
@@ -30,7 +31,7 @@ typedef struct s_forks
 typedef struct s_philo
 {
     size_t id;
-    size_t meals_eaten;
+    long meals_eaten;
     long   t_alive;
     struct s_forks *left;
     struct s_forks *right;

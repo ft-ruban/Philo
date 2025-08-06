@@ -44,7 +44,7 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 			return (INVALID_MAXMEAL);
 	}
 	else
-		set->limit_meal = false;
+		set->max_meal = -1; //todo mettre un NO_MEAL
 	return (RETURN_SUCCESS);
 }
 static int	error_msg(t_settings *set, int return_value)

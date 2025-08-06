@@ -11,9 +11,8 @@ void create_thread(t_philo *philo)
         if(pthread_create(&philo->thread_id, NULL, &routine_even, philo) != 0)
             return;
         philo = philo->next;
-        if(philo && philo->next)
+        if(philo)
         {
-            //printf("ICI\n");//TORM
             gettimeofday(&tv, NULL);
             philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
             if(pthread_create(&philo->thread_id, NULL, &routine_odd, philo) != 0)
@@ -53,6 +52,7 @@ void print_msg_routine(t_philo *philo, size_t cases)
     {
         gettimeofday(&tv, NULL);
         philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
+        philo->meals_eaten = philo->meals_eaten + 1;
         printf("%ld %ld is eating\n",philo->set->time_passed / 1000, philo->id);
     }
     else if(cases == IS_THINKING && philo->set->death != true)
