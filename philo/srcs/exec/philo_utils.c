@@ -11,8 +11,9 @@ void create_thread(t_philo *philo)
         if(pthread_create(&philo->thread_id, NULL, &routine_even, philo) != 0)
             return;
         philo = philo->next;
-        if(philo)
+        if(philo && philo->next)
         {
+            //printf("ICI\n");//TORM
             gettimeofday(&tv, NULL);
             philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
             if(pthread_create(&philo->thread_id, NULL, &routine_odd, philo) != 0)
@@ -43,7 +44,7 @@ void print_msg_routine(t_philo *philo, size_t cases)
     //printf("philo->set->t_die = %ld\n", philo->set->t_die);
     philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
 
-    if (((tv.tv_sec * 1000000 + tv.tv_usec - philo->t_alive) / 1000 >= philo->set->t_die) && philo->set->death != true)
+    if (((tv.tv_sec * 1000000 + tv.tv_usec - philo->t_alive)>= philo->set->t_die) && philo->set->death != true)
     {
         printf("%ld %ld died\n",philo->set->time_passed / 1000, philo->id);
         philo->set->death = true;

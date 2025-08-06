@@ -12,6 +12,7 @@ void* routine_odd(void *arg)
     while(!philo->set->death)
     {
         print_msg_routine(philo, IS_THINKING);
+        usleep(250);
         pthread_mutex_lock(&philo->right->mutex);
         philo->right->available = false;
         print_msg_routine(philo, IS_TAKING_FORK);
@@ -42,6 +43,7 @@ void* routine_even(void *arg)
     while(!philo->set->death)
     {
         print_msg_routine(philo, IS_THINKING);
+        usleep(250);
         pthread_mutex_lock(&philo->left->mutex);
         philo->left->available = false;
         print_msg_routine(philo, IS_TAKING_FORK);
