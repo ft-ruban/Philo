@@ -33,13 +33,15 @@ void* routine_odd(void *arg)
         routine_take_fork(philo, true);
         routine_take_fork(philo, false);
         print_msg_routine(philo, IS_EATING);
-        usleep(philo->set->t_eat);
+        usleep_routine(philo->set->t_eat, philo);
+        //usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
-        usleep(philo->set->t_sleep);   
+        usleep_routine(philo->set->t_sleep, philo);
+        //usleep(philo->set->t_sleep);   
         pthread_mutex_lock(&philo->set->death_mutex);
     }
     pthread_mutex_unlock(&philo->set->death_mutex);
@@ -69,13 +71,15 @@ void* routine_even(void *arg)
         }
         routine_take_fork(philo, true);
         print_msg_routine(philo, IS_EATING);
-        usleep(philo->set->t_eat);
+        usleep_routine(philo->set->t_eat, philo);
+        //usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
-        usleep(philo->set->t_sleep);  
+        usleep_routine(philo->set->t_sleep, philo);
+        //usleep(philo->set->t_sleep);  
         pthread_mutex_lock(&philo->set->death_mutex);  
     }
     pthread_mutex_unlock(&philo->set->death_mutex);

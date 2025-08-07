@@ -1,5 +1,33 @@
 #include "exec.h"
 #include <sys/time.h> //getting time of day need it
+#include <unistd.h> //usleep
+
+void usleep_routine(long time_action, t_philo *philo)
+{
+    long start;
+    long present;
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    start = tv.tv_sec * 1000000 + tv.tv_usec;
+    while (1)
+    {
+        gettimeofday(&tv, NULL);
+        present = tv.tv_sec * 1000000 + tv.tv_usec;
+
+        pthread_mutex_lock(&philo->set->death_mutex);
+        if (philo->set->death == true)
+        {
+            pthread_mutex_unlock(&philo->set->death_mutex);
+            break;
+        }
+        pthread_mutex_unlock(&philo->set->death_mutex);
+        if (present - start >= time_action)
+            break;
+        usleep(100);
+    }
+}
+
 
 void create_thread(t_philo *philo, t_settings *set)
 {
