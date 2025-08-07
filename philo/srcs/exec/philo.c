@@ -45,8 +45,10 @@ void* routine_odd(void *arg)
         pthread_mutex_lock(&philo->set->death_mutex);
     }
     pthread_mutex_unlock(&philo->set->death_mutex);
-    // if(philo->meals_eaten == philo->set->max_meal)
-    //     philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
+    pthread_mutex_lock(&philo->set->pasta_mutex); 
+    if(philo->meals_eaten == philo->set->max_meal)
+        philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
+    pthread_mutex_unlock(&philo->set->pasta_mutex); 
     return(0);
 }
 
@@ -83,8 +85,10 @@ void* routine_even(void *arg)
         pthread_mutex_lock(&philo->set->death_mutex);  
     }
     pthread_mutex_unlock(&philo->set->death_mutex);
-    // if(philo->meals_eaten == philo->set->max_meal)
-    //     philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
+    pthread_mutex_lock(&philo->set->pasta_mutex); 
+    if(philo->meals_eaten == philo->set->max_meal)
+        philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
+    pthread_mutex_unlock(&philo->set->pasta_mutex);
     return(0);
 }
     // pthread_mutex_lock(&philo->set->print_mutex);

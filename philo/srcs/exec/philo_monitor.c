@@ -11,9 +11,10 @@ void* philo_monitor(void *arg)
     struct timeval tv;
 
     tmp = arg;
-    //usleep(5000);
-    while(!start->set->death)
+    pthread_mutex_lock(&start->set->pasta_mutex); 
+    while(!start->set->death && start->set->philo_full_pasta != start->set->nbr_philo)
     {
+        pthread_mutex_unlock(&start->set->pasta_mutex); 
         tmp = start;
         gettimeofday(&tv, NULL);
         now = tv.tv_sec * 1000000 + tv.tv_usec;
@@ -39,6 +40,8 @@ void* philo_monitor(void *arg)
             tmp = tmp->next;
         }
         usleep(1000);
+        pthread_mutex_lock(&start->set->pasta_mutex); 
     }
+    pthread_mutex_unlock(&start->set->pasta_mutex); 
     return(NULL);
 }

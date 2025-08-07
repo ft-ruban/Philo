@@ -54,6 +54,7 @@ typedef struct s_settings
     long philo_full_pasta;
     long max_meal; //could place -1 to set at NONE instead of bool
     bool limit_meal;
+    pthread_mutex_t pasta_mutex;
     pthread_mutex_t death_mutex;
     pthread_mutex_t print_mutex;
     bool death;
