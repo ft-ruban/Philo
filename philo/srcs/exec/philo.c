@@ -23,11 +23,13 @@ void* routine_odd(void *arg)
     t_philo *philo = (t_philo *)arg;
     //struct timeval tv;
     //TODO mettre le t_eat /2 directement dans la struct pour eviter calcul redondant
-    usleep(250);//moitie wait la moitie de manger pour creer un decalage
+    usleep(500);//moitie wait la moitie de manger pour creer un decalage
+    pthread_mutex_lock(&philo->set->death_mutex);
     while(!philo->set->death && philo->meals_eaten != philo->set->max_meal)
     {
+        pthread_mutex_unlock(&philo->set->death_mutex);
         print_msg_routine(philo, IS_THINKING);
-        usleep(250);
+        usleep(500);
         routine_take_fork(philo, true);
         routine_take_fork(philo, false);
         print_msg_routine(philo, IS_EATING);
@@ -38,23 +40,32 @@ void* routine_odd(void *arg)
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
         usleep(philo->set->t_sleep);   
+        pthread_mutex_lock(&philo->set->death_mutex);
     }
+    pthread_mutex_unlock(&philo->set->death_mutex);
+    // if(philo->meals_eaten == philo->set->max_meal)
+    //     philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
     return(0);
 }
 
 void* routine_even(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
+    pthread_mutex_lock(&philo->set->death_mutex);
     while(!philo->set->death && philo->meals_eaten != philo->set->max_meal)
     {
+        pthread_mutex_unlock(&philo->set->death_mutex);
         print_msg_routine(philo, IS_THINKING);
-        usleep(250);
+        usleep(500);
         routine_take_fork(philo, false);
         if(philo->right->id == philo->left->id)
         {
-            while(!philo->set->death)
-                print_msg_routine(philo, WAIT);
+            pthread_mutex_lock(&philo->set->death_mutex);
+            pthread_mutex_unlock(&philo->left->mutex); 
             break;
+            // while(!philo->set->death)
+            //     print_msg_routine(philo, WAIT);
+            
         }
         routine_take_fork(philo, true);
         print_msg_routine(philo, IS_EATING);
@@ -64,8 +75,12 @@ void* routine_even(void *arg)
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
-        usleep(philo->set->t_sleep);    
-        }
+        usleep(philo->set->t_sleep);  
+        pthread_mutex_lock(&philo->set->death_mutex);  
+    }
+    pthread_mutex_unlock(&philo->set->death_mutex);
+    // if(philo->meals_eaten == philo->set->max_meal)
+    //     philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
     return(0);
 }
     // pthread_mutex_lock(&philo->set->print_mutex);
@@ -82,7 +97,7 @@ void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
     gettimeofday(&tv, NULL);
     set->time_passed = (tv.tv_sec -  set->subunit) * 1000000 + (tv.tv_usec - set->subusec);
     // printf("result = : %ld \n",set->time_passed / 1000);
-    create_thread(philo);
+    create_thread(philo, set);
     join_thread(philo);
     set = NULL;
     philo = NULL;

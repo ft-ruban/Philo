@@ -18,6 +18,7 @@ void create_philo(t_settings *settings, t_philo *philo, t_forks *forks)
         forks[i].id = i + 1;
         forks[i].available = true;
         pthread_mutex_init(&forks[i].mutex, NULL); //protect?
+        pthread_mutex_init(&philo[i].t_alive_mutex, NULL);
         forks[i].next = &forks[i + 1];
         i++;
     }
@@ -30,7 +31,13 @@ void create_philo(t_settings *settings, t_philo *philo, t_forks *forks)
     forks[i].id = i + 1;
     forks[i].available = true;
     pthread_mutex_init(&forks[i].mutex, NULL); //protect?
+    pthread_mutex_init(&philo[i].t_alive_mutex, NULL);
     forks[i].next = NULL;//&forks[0];
+    pthread_mutex_init(&philo[i].set->print_mutex, NULL);
+    pthread_mutex_init(&philo[i].set->death_mutex, NULL);
+    //pthread_mutex_init(&philo[i].set->time_passed, NULL);
+
+
 }
 int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_value)
 {

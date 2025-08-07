@@ -36,6 +36,7 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	set->t_sleep = (ft_atol(argv[4]) * 1000);
 	if (set->t_sleep < 0)
 		return (INVALID_SLEEP);
+	// set->philo_full_pasta = 0;
 	if (argv[5])
 	{
 		set->limit_meal = true;

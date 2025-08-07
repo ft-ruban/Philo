@@ -33,6 +33,7 @@ typedef struct s_philo
     size_t id;
     long meals_eaten;
     long   t_alive;
+    pthread_mutex_t t_alive_mutex;
     struct s_forks *left;
     struct s_forks *right;
     struct s_philo *next;
@@ -42,6 +43,7 @@ typedef struct s_philo
 
 typedef struct s_settings
 {
+    pthread_t monitor_thread_id;
     long nbr_philo;
     long t_die;
     long t_eat;
@@ -49,6 +51,7 @@ typedef struct s_settings
     time_t subunit;
     time_t subusec;
     time_t time_passed;
+    long philo_full_pasta;
     long max_meal; //could place -1 to set at NONE instead of bool
     bool limit_meal;
     pthread_mutex_t death_mutex;
