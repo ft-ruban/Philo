@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/08 16:02:16 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/08 16:05:46 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char *argv[])
 	t_philo		*philo;
 	t_forks		*forks;
 
-	set = malloc(sizeof(t_settings));
+	set = malloc(sizeof(t_settings)); //safe
 	if (!set)
 	{
 		write(2, "main:47 : Malloc error\n", 24);
@@ -30,8 +30,8 @@ int	main(int argc, char *argv[])
 	}
 	if (parsing(argc, argv, set))
 		return (EXIT_FAILURE);
-	philo = malloc(sizeof(t_philo) * set->nbr_philo);
-	forks = malloc(sizeof(t_forks) * set->nbr_philo);
+	philo = malloc(sizeof(t_philo) * set->nbr_philo); //safe
+	forks = malloc(sizeof(t_forks) * set->nbr_philo); //safe
 	if (!philo || !forks)
 		return (free_structs(set, philo, forks, EXIT_FAILURE));
 	create_philo(set, philo, forks);

@@ -23,6 +23,6 @@ typedef enum e_error_status
 int     parsing(int argc, char *argv[], t_settings *set);
 
 //parsing_utils.c
-double	ft_atol(const char *nptr);
+long	ft_atol(const char *nptr);
 
 #endif

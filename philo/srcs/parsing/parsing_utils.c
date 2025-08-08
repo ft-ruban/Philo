@@ -1,46 +1,27 @@
 #include "../include/parsing.h"
+#include <limits.h>
 
-//TODO Maybe deal with the highest double possible?
-
-static double final_conversion_check(double result, double decimal_divisor, int negative)
+long	convert_ascii_to_long(int i, const char *nptr, int negative)
 {
-    result = result / decimal_divisor;
-	if (negative)
-		result *= -1.0;
-    return(result);
-}
+	long	result;
 
-static double	convert_ascii_to_double(int i, const char *nptr, int negative,
-		double result)
-{
-	double	decimal_divisor;
-	int		is_fractional;
-
-	decimal_divisor = 1.0;
-	is_fractional = 0;
-	while ((nptr[i] >= '0' && nptr[i] <= '9') || nptr[i] == '.'
-		|| nptr[i] == ',')
+	result = 0;
+	while (nptr[i] <= '9' && nptr[i] >= '0')
 	{
-		if (nptr[i] == '.' || nptr[i] == ',')
-		{
-			if (is_fractional)
-				break ;
-			is_fractional = 1;
-			i++;
-			continue ;
-		}
-		result = result * 10 + (nptr[i] - '0');
-		if (is_fractional)
-			decimal_divisor *= 10.0;
+		result += nptr[i] - 48;
+		if (nptr[i + 1] <= '9' && nptr[i + 1] >= '0')
+			result *= 10;
+		if (result > (LONG_MAX - (nptr[i] - '0')) / 10)
+			return (negative ? LONG_MIN : LONG_MAX);
+
 		i++;
 	}
-    if(nptr[i])
-        return(INVALID_INPUT);
-    else
-	    return (final_conversion_check(result,decimal_divisor,negative));
+	if (negative == true)
+		result *= -1;
+	return (result);
 }
 
-double	ft_atol(const char *nptr)
+long	ft_atol(const char *nptr)
 {
 	int	i;
 	int	negative;
@@ -55,5 +36,5 @@ double	ft_atol(const char *nptr)
 			negative = true;
 		i++;
 	}
-	return (convert_ascii_to_double(i, nptr, negative, 0.0));
+	return (convert_ascii_to_long(i, nptr, negative));
 }
