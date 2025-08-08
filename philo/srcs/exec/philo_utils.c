@@ -74,10 +74,12 @@ void join_thread(t_philo *philo)
 void print_msg_routine(t_philo *philo, size_t cases)
 {
     struct timeval tv;
+    time_t now;
     
     gettimeofday(&tv, NULL);
+    now = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
     pthread_mutex_lock(&philo->set->print_mutex);
-    philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
+    //philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
     
     if (cases == IS_EATING && philo->set->death != true)
     {
@@ -86,13 +88,13 @@ void print_msg_routine(t_philo *philo, size_t cases)
         philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
         pthread_mutex_unlock(&philo->t_alive_mutex);
         philo->meals_eaten = philo->meals_eaten + 1;
-        printf("%ld %ld is eating\n",philo->set->time_passed / 1000, philo->id);
+        printf("%ld %ld is eating\n",now / 1000, philo->id);
     }
     else if(cases == IS_THINKING && philo->set->death != true)
-        printf("%ld %ld is thinking\n",philo->set->time_passed / 1000, philo->id);
+        printf("%ld %ld is thinking\n",now / 1000, philo->id);
     else if (cases == IS_TAKING_FORK && philo->set->death != true)
-        printf("%ld %ld has taken a fork\n",philo->set->time_passed / 1000, philo->id);
+        printf("%ld %ld has taken a fork\n",now / 1000, philo->id);
     else if (cases == IS_SLEEPING && philo->set->death != true)
-        printf("%ld %ld is sleeping\n",philo->set->time_passed / 1000, philo->id);
+        printf("%ld %ld is sleeping\n",now / 1000, philo->id);
     pthread_mutex_unlock(&philo->set->print_mutex);
 }
