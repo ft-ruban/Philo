@@ -60,11 +60,6 @@ typedef struct s_settings
     bool death;
 } t_settings;
 
-//debug.c
-void print_id_related_forks(t_philo *philo, t_forks *forks);
-void print_content_set(t_settings *set);
-void usleep_routine(long time_action, t_philo *philo);
-
 //utils.c
 void create_philo(t_settings *settings, t_philo *philo, t_forks *forks);
 int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_value);
