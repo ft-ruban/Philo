@@ -21,7 +21,7 @@ void* philo_monitor(void *arg)
         while(tmp)
         {
             pthread_mutex_lock(&tmp->t_alive_mutex);
-            if (now - tmp->t_alive > tmp->set->t_die)
+            if (now - tmp->t_alive > tmp->set->t_die && tmp->meals_eaten != tmp->set->max_meal)
             {
                 pthread_mutex_unlock(&tmp->t_alive_mutex);
                 pthread_mutex_lock(&tmp->set->print_mutex);

@@ -79,8 +79,6 @@ void print_msg_routine(t_philo *philo, size_t cases)
     gettimeofday(&tv, NULL);
     now = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
     pthread_mutex_lock(&philo->set->print_mutex);
-    //philo->set->time_passed = (tv.tv_sec -  philo->set->subunit) * 1000000 + (tv.tv_usec - philo->set->subusec);
-    
     if (cases == IS_EATING && philo->set->death != true)
     {
         gettimeofday(&tv, NULL);
