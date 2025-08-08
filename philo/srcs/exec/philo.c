@@ -23,24 +23,31 @@ void* routine_odd(void *arg)
     t_philo *philo = (t_philo *)arg;
     //struct timeval tv;
     //TODO mettre le t_eat /2 directement dans la struct pour eviter calcul redondant
-    usleep(500);//moitie wait la moitie de manger pour creer un decalage
+    usleep(1000);//moitie wait la moitie de manger pour creer un decalage
     pthread_mutex_lock(&philo->set->death_mutex);
     while(!philo->set->death && philo->meals_eaten != philo->set->max_meal)
     {
         pthread_mutex_unlock(&philo->set->death_mutex);
         print_msg_routine(philo, IS_THINKING);
-        usleep(500);
+        usleep(250);
         routine_take_fork(philo, true);
         routine_take_fork(philo, false);
         print_msg_routine(philo, IS_EATING);
-        usleep_routine(philo->set->t_eat, philo);
-        //usleep(philo->set->t_eat);
+        //usleep_routine(philo->set->t_eat, philo);
+        if(philo->set->t_eat > philo->set->t_die)
+            usleep(philo->set->t_die);
+        else
+            usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
-        usleep_routine(philo->set->t_sleep, philo);
+        if(philo->set->t_eat + philo->set->t_sleep > philo->set->t_die)
+            usleep(philo->set->t_die);
+        else
+        usleep(philo->set->t_eat);
+        //usleep_routine(philo->set->t_sleep, philo);
         //usleep(philo->set->t_sleep);   
         pthread_mutex_lock(&philo->set->death_mutex);
     }
@@ -60,7 +67,7 @@ void* routine_even(void *arg)
     {
         pthread_mutex_unlock(&philo->set->death_mutex);
         print_msg_routine(philo, IS_THINKING);
-        usleep(500);
+        usleep(250);
         routine_take_fork(philo, false);
         if(philo->right->id == philo->left->id)
         {
@@ -73,14 +80,22 @@ void* routine_even(void *arg)
         }
         routine_take_fork(philo, true);
         print_msg_routine(philo, IS_EATING);
-        usleep_routine(philo->set->t_eat, philo);
+        if(philo->set->t_eat > philo->set->t_die)
+            usleep(philo->set->t_die);
+        else
+        usleep(philo->set->t_eat);
+        //usleep_routine(philo->set->t_eat, philo);
         //usleep(philo->set->t_eat);
         philo->left->available = true;
         pthread_mutex_unlock(&philo->left->mutex);
         philo->right->available = true;
         pthread_mutex_unlock(&philo->right->mutex);
         print_msg_routine(philo, IS_SLEEPING);
-        usleep_routine(philo->set->t_sleep, philo);
+        if(philo->set->t_eat + philo->set->t_sleep > philo->set->t_die)
+            usleep(philo->set->t_die);
+        else
+        usleep(philo->set->t_eat);
+        //usleep_routine(philo->set->t_sleep, philo);
         //usleep(philo->set->t_sleep);  
         pthread_mutex_lock(&philo->set->death_mutex);  
     }

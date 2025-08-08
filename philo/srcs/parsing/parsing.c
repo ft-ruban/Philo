@@ -25,7 +25,7 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 {
 	set->death = false;
 	set->nbr_philo = ft_atol(argv[1]);
-	if (set->nbr_philo < 1 || set->nbr_philo > 200)
+	if (set->nbr_philo < 1 || set->nbr_philo > 250)
 		return (INVALID_PHILO);
 	set->t_die = (ft_atol(argv[2]) * 1000);
 	if (set->t_die < 0)
@@ -54,7 +54,7 @@ static int	error_msg(t_settings *set, int return_value)
 		write(2, "philo: INVALID_ARGC: only support 4 or 5 parameters\n", 53);
 	if (return_value == INVALID_PHILO)
 		write(2,
-			"philo: INVALID_PHILO: invalid input enter a value between 1 and 200\n",
+			"philo: INVALID_PHILO: invalid input enter a value between 1 and 250\n",
 			69);
 	if (return_value == INVALID_DIE)
 		write(2,
