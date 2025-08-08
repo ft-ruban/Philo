@@ -59,7 +59,7 @@ static int	error_msg(t_settings *set, int return_value)
 	if (return_value == INVALID_DIE)
 		write(2,
 			"philo: INVALID_DIE: invalid input enter a value between 0 and LONG_MAX\n",
-			73);
+			72);
 	if (return_value == INVALID_EAT)
 		write(2,
 			"philo: INVALID_EAT: invalid input enter a value between 0 and LONG_MAX\n",
