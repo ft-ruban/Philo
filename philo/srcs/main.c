@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/08 16:05:46 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/09 13:24:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	main(int argc, char *argv[])
 	forks = malloc(sizeof(t_forks) * set->nbr_philo); //safe
 	if (!philo || !forks)
 		return (free_structs(set, philo, forks, EXIT_FAILURE));
-	create_philo(set, philo, forks);
+	if(setup_philo_forks_struct(set, philo, forks))
+		return(free_structs(set, philo, forks, EXIT_FAILURE));
 	philosopher(set, philo, forks);
 	free_structs(set, philo, forks, EXIT_SUCCESS);
 	return (EXIT_SUCCESS);

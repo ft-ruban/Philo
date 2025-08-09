@@ -122,10 +122,4 @@ void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
     // printf("result = : %ld \n",set->time_passed / 1000);
     create_thread(philo, set);
     join_thread(philo);
-    set = NULL;
-    philo = NULL;
-    forks = NULL;
-   // printf("nice");
-    // thread_maker(set, philo, forks);
-    //while(!set->death)
 }
