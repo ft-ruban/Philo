@@ -28,47 +28,54 @@ void usleep_routine(long time_action, t_philo *philo)
     }
 }
 
-
-void create_thread(t_philo *philo, t_settings *set)
+static long fill_now()
 {
     struct timeval tv;
-    t_philo *tmp;
 
+    gettimeofday(&tv, NULL);
+    return(tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
+int create_thread(t_philo *philo, t_philo *tmp, long now, bool even)
+{
     tmp = philo;
     while(philo)
     {
-        gettimeofday(&tv, NULL);
+        now = fill_now();
         pthread_mutex_lock(&philo->t_alive_mutex);
-        philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
+        philo->t_alive = now;
         pthread_mutex_unlock(&philo->t_alive_mutex);
-        if(pthread_create(&philo->thread_id, NULL, &routine_even, philo) != 0)
-            return;
-        philo = philo->next;
-        if(philo)
+        if(even)
         {
-            gettimeofday(&tv, NULL);
-            pthread_mutex_lock(&philo->t_alive_mutex);
-            philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
-            pthread_mutex_unlock(&philo->t_alive_mutex);
-            if(pthread_create(&philo->thread_id, NULL, &routine_odd, philo) != 0)
-                return;
-            philo = philo->next;
+            if(pthread_create(&philo->thread_id, NULL, &routine_even, philo) != 0)
+                return(RETURN_FAILURE);
+            even = false;
         }
+        else
+        {
+            if (pthread_create(&philo->thread_id, NULL, &routine_odd, philo) != 0)
+                return(RETURN_FAILURE);
+            even = true;
+        }
+        philo = philo->next;
     }
-    if(pthread_create(&set->monitor_thread_id, NULL, &philo_monitor, tmp) != 0)
-        return;
-
+    if(pthread_create(&tmp->set->monitor_thread_id, NULL, &philo_monitor, tmp) != 0)
+        return(RETURN_FAILURE);
+    return(RETURN_SUCCESS);
 }
-void join_thread(t_philo *philo)
+
+int join_thread(t_philo *philo)
 {
 
-    pthread_join(philo->set->monitor_thread_id, NULL);
+    if(pthread_join(philo->set->monitor_thread_id, NULL))
+        return(RETURN_FAILURE); //protect
     while(philo)
     {
-        pthread_join(philo->thread_id, NULL); //protect?
+        if(pthread_join(philo->thread_id, NULL))
+            return(RETURN_FAILURE); //protect?
         philo = philo->next;
     }
-    
+    return(RETURN_SUCCESS);
 }
 
 void print_msg_routine(t_philo *philo, size_t cases)

@@ -106,8 +106,6 @@ void* routine_even(void *arg)
     pthread_mutex_unlock(&philo->set->pasta_mutex);
     return(0);
 }
-    // pthread_mutex_lock(&philo->set->print_mutex);
-    // pthread_mutex_unlock(&philo->set->print_mutex);
 
 void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
 {
@@ -116,10 +114,11 @@ void philosopher(t_settings *set, t_philo *philo, t_forks *forks)
     gettimeofday(&tv, NULL);
     set->subunit = tv.tv_sec;
     set->subusec = tv.tv_usec;
-    //usleep(5006000);
     gettimeofday(&tv, NULL);
     set->time_passed = (tv.tv_sec -  set->subunit) * 1000000 + (tv.tv_usec - set->subusec);
-    // printf("result = : %ld \n",set->time_passed / 1000);
-    create_thread(philo, set);
+    create_thread(philo, NULL, 0, true); //TOPROTECT
+        //retour d'erreur
     join_thread(philo);
+    forks = NULL;
+    //retour positif
 }
