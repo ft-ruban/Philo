@@ -8,12 +8,12 @@ SRC += $(addprefix $(MAINDIR), $(addsuffix .c, $(MAIN)))
 
 override MAIN := \
 	main \
-	debug \
 	utils \
 
 SRC += $(addprefix $(PARSERDIR), $(addsuffix .c, $(PARSERSRC)))
 
 override PARSERSRC := \
+	parsing_error_msg \
 	parsing_utils \
 	parsing \
 

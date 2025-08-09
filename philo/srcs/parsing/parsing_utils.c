@@ -1,46 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/09 10:51:31 by ldevoude          #+#    #+#             */
+/*   Updated: 2025/08/09 10:53:01 by ldevoude         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/parsing.h"
+#include <limits.h>
 
-//TODO Maybe deal with the highest double possible?
-
-static double final_conversion_check(double result, double decimal_divisor, int negative)
+long	convert_ascii_to_long(int i, const char *nptr, int negative)
 {
-    result = result / decimal_divisor;
-	if (negative)
-		result *= -1.0;
-    return(result);
-}
+	long	result;
 
-static double	convert_ascii_to_double(int i, const char *nptr, int negative,
-		double result)
-{
-	double	decimal_divisor;
-	int		is_fractional;
-
-	decimal_divisor = 1.0;
-	is_fractional = 0;
-	while ((nptr[i] >= '0' && nptr[i] <= '9') || nptr[i] == '.'
-		|| nptr[i] == ',')
+	result = 0;
+	while (nptr[i] <= '9' && nptr[i] >= '0')
 	{
-		if (nptr[i] == '.' || nptr[i] == ',')
+		result += nptr[i] - 48;
+		if (nptr[i + 1] <= '9' && nptr[i + 1] >= '0')
+			result *= 10;
+		if (result > (LONG_MAX - (nptr[i] - '0')) / 10)
 		{
-			if (is_fractional)
-				break ;
-			is_fractional = 1;
-			i++;
-			continue ;
+			if (negative)
+				return (LONG_MIN);
+			else
+				return (LONG_MAX);
 		}
-		result = result * 10 + (nptr[i] - '0');
-		if (is_fractional)
-			decimal_divisor *= 10.0;
 		i++;
 	}
-    if(nptr[i])
-        return(INVALID_INPUT);
-    else
-	    return (final_conversion_check(result,decimal_divisor,negative));
+	if (negative == true)
+		result *= -1;
+	return (result);
 }
 
-double	ft_atol(const char *nptr)
+long	ft_atol(const char *nptr)
 {
 	int	i;
 	int	negative;
@@ -55,5 +52,15 @@ double	ft_atol(const char *nptr)
 			negative = true;
 		i++;
 	}
-	return (convert_ascii_to_double(i, nptr, negative, 0.0));
+	return (convert_ascii_to_long(i, nptr, negative));
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len] != '\0')
+		len++;
+	return (len);
 }

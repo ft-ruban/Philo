@@ -14,8 +14,8 @@ typedef enum e_msg_to_print
 //philo_monitor.c
 void* philo_monitor(void *arg);
 //philo_utils.c
-void join_thread(t_philo *philo);
-void create_thread(t_philo *philo, t_settings *set);
+int join_thread(t_philo *philo);
+int create_thread(t_philo *philo, t_philo *tmp, long now, bool even);
 void print_msg_routine(t_philo *philo, size_t cases);
 
 //philo.c
