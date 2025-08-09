@@ -53,7 +53,6 @@ typedef struct s_settings
     time_t time_passed;
     long philo_full_pasta;
     long max_meal; //could place -1 to set at NONE instead of bool
-    bool limit_meal;
     pthread_mutex_t pasta_mutex;
     pthread_mutex_t death_mutex;
     pthread_mutex_t print_mutex;
@@ -63,7 +62,6 @@ typedef struct s_settings
 //utils.c
 void create_philo(t_settings *settings, t_philo *philo, t_forks *forks);
 int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_value);
-
 
 
 

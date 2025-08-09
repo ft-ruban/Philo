@@ -49,3 +49,4 @@ int free_structs(t_settings *set,  t_philo *philo, t_forks *forks, int return_va
         free(forks);
     return(return_value);
 }
+
