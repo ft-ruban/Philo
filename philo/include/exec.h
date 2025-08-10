@@ -22,7 +22,6 @@ void* routine_even(void *arg);
 
 //philo_utils.c
 void print_msg_routine(t_philo *philo, size_t cases);
-long fill_now();
 void routine_take_fork(t_philo *philo, bool right);
 //void routine_sleep(t_philo *philo, bool *first_iteration);
 

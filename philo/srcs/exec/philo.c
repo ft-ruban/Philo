@@ -3,6 +3,14 @@
 #include "exec.h"
 #include <unistd.h> //usleep
 
+static long	fill_now(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
 static int create_thread(t_philo *philo, t_philo *tmp, long now, bool even)
 {
     tmp = philo;
