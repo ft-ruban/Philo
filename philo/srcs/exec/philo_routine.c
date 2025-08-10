@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/10 16:03:53 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/10 18:26:12 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void	*routine_odd(void *arg)
 
 	philo = (t_philo *)arg;
 	first_iteration = true;
-	usleep(philo->set->t_eat / 2);
+	if (philo->set->t_eat < philo->set->t_die)
+		usleep(philo->set->t_eat / 2);
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
