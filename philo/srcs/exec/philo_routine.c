@@ -6,29 +6,20 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 13:19:23 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 14:07:10 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include <unistd.h> //usleep
 
-static void	routine_sleep(t_philo *philo, bool *first_iteration)
+static void	routine_sleep(t_philo *philo)
 {
 	print_msg_routine(philo, IS_SLEEPING);
-	if (*first_iteration)
-	{
-		if (philo->set->t_eat + philo->set->t_sleep > philo->set->t_die)
-			usleep(philo->set->t_die);
-		else
-			ft_usleep(philo->set->t_sleep,philo->set);
-		*first_iteration = false;
-	}
-	else
-		ft_usleep(philo->set->t_sleep,philo->set);//usleep(philo->set->t_sleep);
+	ft_usleep(philo->set->t_sleep,philo->set);//usleep(philo->set->t_sleep);
 }
 
-static void	think_fork_even(t_philo *philo, bool first_iteration,
+static void	think_fork_even(t_philo *philo,
 		bool *break_loop)
 {
 	print_msg_routine(philo, IS_THINKING);
@@ -41,15 +32,7 @@ static void	think_fork_even(t_philo *philo, bool first_iteration,
 	}
 	routine_take_fork(philo, true);
 	print_msg_routine(philo, IS_EATING);
-	if (first_iteration)
-	{
-		if (philo->set->t_eat > philo->set->t_die) //POT USELESS
-			usleep(philo->set->t_die);
-		else
-			ft_usleep(philo->set->t_eat,philo->set);
-	}
-	else
-		ft_usleep(philo->set->t_eat,philo->set);
+	ft_usleep(philo->set->t_eat,philo->set);
 	pthread_mutex_lock(&philo->right->mutex);	
 	philo->right->available = true;
 	pthread_mutex_unlock(&philo->right->mutex);
@@ -58,25 +41,20 @@ static void	think_fork_even(t_philo *philo, bool first_iteration,
 	pthread_mutex_unlock(&philo->left->mutex);
 }
 
-static void	think_fork_odd(t_philo *philo, bool first_iteration)
+static void	think_fork_odd(t_philo *philo, bool *first_iteration)
 {
 	print_msg_routine(philo, IS_THINKING);
-	if (first_iteration)
+	if (*first_iteration)
+	{
+		*first_iteration = false;
 		ft_usleep(philo->set->t_eat,philo->set);
+	}
 	else
 		usleep(250);
 	routine_take_fork(philo, false);
 	routine_take_fork(philo, true);
 	print_msg_routine(philo, IS_EATING);
-	if (first_iteration)
-	{
-		if (philo->set->t_eat > philo->set->t_die) //POT USELESS
-			usleep(philo->set->t_die);
-		else
-			ft_usleep(philo->set->t_eat,philo->set);
-	}
-	else
-		ft_usleep(philo->set->t_eat,philo->set);
+	ft_usleep(philo->set->t_eat,philo->set);
 	pthread_mutex_lock(&philo->left->mutex);
 	philo->left->available = true;
 	pthread_mutex_unlock(&philo->left->mutex);
@@ -96,8 +74,8 @@ void	*routine_odd(void *arg)
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
 		pthread_mutex_unlock(&philo->set->death_mutex);
-		think_fork_odd(philo, first_iteration);
-		routine_sleep(philo, &first_iteration);
+		think_fork_odd(philo, &first_iteration);
+		routine_sleep(philo);
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
 	pthread_mutex_unlock(&philo->set->death_mutex);
@@ -121,10 +99,10 @@ void	*routine_even(void *arg)
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
 		pthread_mutex_unlock(&philo->set->death_mutex);
-		think_fork_even(philo, first_iteration, &break_loop);
+		think_fork_even(philo, &break_loop);
 		if (break_loop)
 			break ;
-		routine_sleep(philo, &first_iteration);
+		routine_sleep(philo);
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
 	if(!break_loop)
