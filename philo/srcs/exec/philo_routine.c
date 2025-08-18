@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/10 18:26:12 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 10:03:20 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,12 @@ static void	think_fork_even(t_philo *philo, bool first_iteration,
 static void	think_fork_odd(t_philo *philo, bool first_iteration)
 {
 	print_msg_routine(philo, IS_THINKING);
-	usleep(250);
-	routine_take_fork(philo, true);
+	if (first_iteration)
+		usleep(philo->set->t_eat);
+	else
+		usleep(250);
 	routine_take_fork(philo, false);
+	routine_take_fork(philo, true);
 	print_msg_routine(philo, IS_EATING);
 	if (first_iteration)
 	{
@@ -87,8 +90,6 @@ void	*routine_odd(void *arg)
 
 	philo = (t_philo *)arg;
 	first_iteration = true;
-	if (philo->set->t_eat < philo->set->t_die)
-		usleep(philo->set->t_eat / 2);
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{

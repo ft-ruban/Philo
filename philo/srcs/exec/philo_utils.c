@@ -6,13 +6,35 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/10 17:16:37 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 09:17:23 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include <sys/time.h> //getting time of day need it
 #include <unistd.h>   //usleep
+
+long    get_time_in_us(void)
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000000L + tv.tv_usec);
+}
+
+void    ft_usleep(long usec)
+{
+    long start;
+    long now;
+
+    start = get_time_in_us();
+    while (1)
+    {
+        now = get_time_in_us();
+        if (now - start >= usec)
+            break;
+        usleep(100);
+    }
+}
 
 void	routine_take_fork(t_philo *philo, bool right)
 {
@@ -58,8 +80,8 @@ void	print_msg_routine(t_philo *philo, size_t cases)
 	if (cases == IS_EATING && philo->set->death != true)
 	{
 		now = fill_now_print(philo->set);
-		printf("%ld %ld is eating\n", now / 1000, philo->id);
 		update_eat(philo);
+		printf("%ld %ld is eating\n", now / 1000, philo->id);
 	}
 	else if (cases == IS_THINKING && philo->set->death != true)
 	{

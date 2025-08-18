@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:24:01 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/10 18:26:02 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 09:03:35 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	*philo_monitor(void *arg)
 		now = tv.tv_sec * 1000000 + tv.tv_usec;
 		if (philo_monitor_loop_threads(tmp, now, tv))
 			return (NULL);
-		usleep(1000);
+		ft_usleep(tmp->set->t_die);
 		pthread_mutex_lock(&start->set->pasta_mutex);
 	}
 	pthread_mutex_unlock(&start->set->pasta_mutex);
