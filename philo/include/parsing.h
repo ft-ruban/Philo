@@ -19,6 +19,7 @@ typedef enum e_error_status
   INVALID_SLEEP,
   INVALID_MAXMEAL,
   INVALID_SLEEP_PLUS_EAT,
+  INVALID_NUM_VALUE,
 } t_error_status;
 
 //parsing_err_msg
