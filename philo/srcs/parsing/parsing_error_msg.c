@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:34:54 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/09 10:49:25 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 14:53:44 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ static void	msg_sleep_maxmeal_sleep_plus_eat(int return_value)
 	{
 		write(2, "philo: INVALID_SLEEP_PLUS_EAT: the sum of those", 48);
 		write(2, " parameters overflow 9223372036854775 ms\n", 42);
+	}
+	else if (return_value == INVALID_NUM_VALUE)
+	{
+		write(2, "philo: INVALID_NUM_VALUE: invalid input", 40);
+		write(2, " enter only numerical values (0-9)\n", 36);
 	}
 }
 

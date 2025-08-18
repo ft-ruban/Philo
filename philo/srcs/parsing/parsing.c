@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:50:22 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/09 10:50:27 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 14:57:10 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,47 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	return (RETURN_SUCCESS);
 }
 
+static int	ft_isnum(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (RETURN_SUCCESS);
+	else
+		return (RETURN_ERROR);
+}
+
+static int check_if_num_val(char *argv[])
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	j = 0;
+	while(argv[i])
+	{
+		while(argv[i][j])
+		{
+			while(argv[i][j] == ' ')
+				j++;
+			if(ft_isnum((int)argv[i][j]))
+				return(RETURN_ERROR);
+			j++;
+		}
+		if(j == 0)
+			return(RETURN_ERROR);
+		j = 0;
+		i++;
+	}
+	return(RETURN_SUCCESS);
+}
+
 int	parsing(int argc, char *argv[], t_settings *set)
 {
 	size_t	return_value;
 
 	if (argc > 6 || argc < 5)
 		return (error_msg(set, INVALID_ARGC));
+	if(check_if_num_val(argv))
+		return (error_msg(set, INVALID_NUM_VALUE));
 	return_value = convert_argv_to_struct_utils(argv, set);
 	if (return_value)
 		return (error_msg(set, return_value));
