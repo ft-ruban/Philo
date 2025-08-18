@@ -3,6 +3,7 @@
         "exec.h": "c",
         "time.h": "c",
         "stdbool.h": "c",
-        "parsing.h": "c"
+        "parsing.h": "c",
+        "unistd.h": "c"
     }
 }

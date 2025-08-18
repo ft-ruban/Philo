@@ -11,12 +11,19 @@ typedef enum e_msg_to_print
   IS_SLEEPING,
 } t_msg_to_print;
 
+
+
 //philo_monitor.c
 void* philo_monitor(void *arg);
+
+//philo_routine.c
+void* routine_odd(void *arg);
+void* routine_even(void *arg);
+
 //philo_utils.c
-int join_thread(t_philo *philo);
-int create_thread(t_philo *philo, t_philo *tmp, long now, bool even);
 void print_msg_routine(t_philo *philo, size_t cases);
+void routine_take_fork(t_philo *philo, bool right);
+//void routine_sleep(t_philo *philo, bool *first_iteration);
 
 //philo.c
 void* routine_odd(void *arg);

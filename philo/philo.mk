@@ -22,5 +22,6 @@ SRC += $(addprefix $(EXECDIR), $(addsuffix .c, $(EXECSRC)))
 
 override EXECSRC := \
 	philo_monitor \
+	philo_routine \
 	philo \
 	philo_utils
