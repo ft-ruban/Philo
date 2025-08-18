@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 09:17:23 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 13:10:07 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,27 @@ long    get_time_in_us(void)
     return (tv.tv_sec * 1000000L + tv.tv_usec);
 }
 
-void    ft_usleep(long usec)
+void    ft_usleep(long usec, t_settings *set)
 {
     long start;
     long now;
 
     start = get_time_in_us();
-    while (1)
+	pthread_mutex_lock(&set->print_mutex);
+    while (!set->death)
     {
+		pthread_mutex_unlock(&set->print_mutex);
         now = get_time_in_us();
         if (now - start >= usec)
-            break;
+		{
+			pthread_mutex_lock(&set->print_mutex);
+			break;
+		}
+            
         usleep(100);
+		pthread_mutex_lock(&set->print_mutex);
     }
+	pthread_mutex_unlock(&set->print_mutex);
 }
 
 void	routine_take_fork(t_philo *philo, bool right)
@@ -41,13 +49,27 @@ void	routine_take_fork(t_philo *philo, bool right)
 	if (right)
 	{
 		pthread_mutex_lock(&philo->right->mutex);
+		while(!philo->right->available)
+		{
+			pthread_mutex_unlock(&philo->right->mutex);
+			usleep(250);
+			pthread_mutex_lock(&philo->right->mutex);
+		}
 		philo->right->available = false;
+		pthread_mutex_unlock(&philo->right->mutex);
 		print_msg_routine(philo, IS_TAKING_FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(&philo->left->mutex);
+		while(!philo->left->available)
+		{
+			pthread_mutex_unlock(&philo->left->mutex);
+			usleep(250);
+			pthread_mutex_lock(&philo->left->mutex);
+		}
 		philo->left->available = false;
+		pthread_mutex_unlock(&philo->left->mutex);
 		print_msg_routine(philo, IS_TAKING_FORK);
 	}
 }
