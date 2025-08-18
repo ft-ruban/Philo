@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:50:22 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 14:57:10 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 15:27:23 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	if (argv[5])
 	{
 		set->max_meal = ft_atol(argv[5]);
-		if (set->max_meal < 0 || ft_strlen(argv[4]) > 16)
+		if (set->max_meal < 0 || ft_strlen(argv[5]) > 16) //revoir par rapport a la logique qu'on veut ici
 			return (INVALID_MAXMEAL);
 	}
 	else

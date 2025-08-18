@@ -6,14 +6,16 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:23:13 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 11:34:13 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 15:43:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 #include "stdlib.h"
 
-static int	destroy_mutex(t_settings *settings, t_philo *philo, t_forks *forks,
+//TODO complete all mutex (pastamutex for ex)
+
+int	destroy_mutex(t_settings *settings, t_philo *philo, t_forks *forks,
 		long i)
 {
 	if (settings->bool_print_mutex == true)
@@ -68,6 +70,8 @@ static int	setup_last_node(t_settings *settings, t_philo *philo,
 		return (destroy_mutex(settings, philo, forks, i));
 	philo[i].set->bool_print_mutex = true;
 	if (pthread_mutex_init(&philo[i].set->death_mutex, NULL))
+		return (destroy_mutex(settings, philo, forks, i));
+	if (pthread_mutex_init(&philo->set->pasta_mutex, NULL)) //check si destroy_mutex is enough UPDATE je ne pense pas regarde au dessus avec les true et falses
 		return (destroy_mutex(settings, philo, forks, i));
 	philo[i].set->bool_death_mutex = true;
 	return (RETURN_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/10 17:07:34 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/18 15:44:28 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	philosopher(t_settings *set, t_philo *philo, t_forks *forks)
 	gettimeofday(&tv, NULL);
 	set->subunit = tv.tv_sec;
 	set->subusec = tv.tv_usec;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, NULL); //secure?
 	set->time_passed = (tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec
 			- set->subusec);
 	create_thread(philo, NULL, true);
