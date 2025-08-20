@@ -74,6 +74,13 @@ static int check_if_num_val(char *argv[])
 	return(RETURN_SUCCESS);
 }
 
+// At first we look at if the user sent the right nbr of arguments
+// then we check if the user did enter only numbers and not letters
+// then we convert our type char argument into an usable type
+// and place them into our set struct
+// if there is any error during the process we print the necessary error msg
+// before exiting our program.
+
 int	parsing(int argc, char *argv[], t_settings *set)
 {
 	size_t	return_value;

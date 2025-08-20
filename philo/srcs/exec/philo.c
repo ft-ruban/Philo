@@ -73,7 +73,7 @@ static int	join_thread(t_philo *philo)
 }
 // protect create_thread + retour positif si success et aussi protect join?
 
-void	philosopher(t_settings *set, t_philo *philo, t_forks *forks)
+void	philosopher(t_settings *set, t_philo *philo)
 {
 	struct timeval	tv;
 
@@ -85,5 +85,4 @@ void	philosopher(t_settings *set, t_philo *philo, t_forks *forks)
 			- set->subusec);
 	create_thread(philo, NULL, true);
 	join_thread(philo);
-	forks = NULL;
 }

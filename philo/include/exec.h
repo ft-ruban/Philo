@@ -39,6 +39,6 @@ void	ft_usleep(long usec, t_settings *set);
 // philo.c
 void	*routine_odd(void *arg);
 void	*routine_even(void *arg);
-void	philosopher(t_settings *set, t_philo *philo, t_forks *forks);
+void	philosopher(t_settings *set, t_philo *philo);
 
 #endif

@@ -89,12 +89,10 @@ void	*routine_odd(void *arg)
 void	*routine_even(void *arg)
 {
 	t_philo	*philo;
-	bool	first_iteration;
 	bool	break_loop;
 
 	philo = (t_philo *)arg;
 	break_loop = false;
-	first_iteration = true;
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{

@@ -18,6 +18,12 @@
 
 //TODL malloc secure until line 36
 
+//at first we malloc our set struct then check the arguments entered 
+//in our parsing we also fill our set struct in the parsing
+//once parsing successful we setup philo struct and forks struct
+//once done we can start our simulation once done we destroy 
+//mutex, free our struct to exit properly
+
 int	main(int argc, char *argv[])
 {
 	t_settings	*set;
@@ -38,7 +44,7 @@ int	main(int argc, char *argv[])
 		return (free_structs(set, philo, forks, EXIT_FAILURE)); //TODO error msg about malloc errors
 	if(setup_philo_forks_struct(set, philo, forks))
 		return(free_structs(set, philo, forks, EXIT_FAILURE));
-	philosopher(set, philo, forks);
+	philosopher(set, philo);
 	destroy_mutex(set, philo, forks, set->nbr_philo - 1); //devrait etre good enough
 	//destroy nos mutex?
 	free_structs(set, philo, forks, EXIT_SUCCESS);
