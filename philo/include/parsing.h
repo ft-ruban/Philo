@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:38 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 15:17:39 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 09:41:13 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef enum e_error_status
 }		t_error_status;
 
 // parsing_err_msg
-int		error_msg(t_settings *set, int return_value);
+int		error_msg(int return_value);
 
 // parsing.c
 int		parsing(int argc, char *argv[], t_settings *set);

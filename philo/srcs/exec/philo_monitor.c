@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:24:01 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 10:38:34 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 16:25:24 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,21 @@ void	*philo_monitor(void *arg)
 
 	start = arg;
 	tmp = arg;
+	//usleep(tmp->set->t_die / 2);
 	pthread_mutex_lock(&start->set->pasta_mutex);
 	while (!start->set->death
 		&& start->set->philo_full_pasta != start->set->nbr_philo)
 	{
 		pthread_mutex_unlock(&start->set->pasta_mutex);
+		usleep(5000);
 		tmp = start;
 		gettimeofday(&tv, NULL);
 		now = tv.tv_sec * 1000000 + tv.tv_usec;
 		if (philo_monitor_loop_threads(tmp, now, tv))
 			return (NULL);
-		usleep(tmp->set->t_die);
+		//usleep(tmp->set->t_die / 2);
+		//usleep(tmp->set->t_die);
+		
 		pthread_mutex_lock(&start->set->pasta_mutex);
 	}
 	pthread_mutex_unlock(&start->set->pasta_mutex);

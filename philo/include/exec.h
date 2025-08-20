@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:28 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 07:40:16 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 10:38:53 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define EXEC_H
 
 # include "philo.h"
+
+#define THINK_DELAY 150
 
 typedef enum e_msg_to_print
 {

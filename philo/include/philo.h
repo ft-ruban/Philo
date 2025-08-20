@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:16:55 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 15:41:54 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 14:16:21 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ typedef enum e_activity_philosophers
 	DIED,
 	WAIT
 }						t_activity_philosophers;
+
+typedef enum e_return_value_main
+{
+	MALLOC_SET_ERROR = 1,
+	PARSING_ERROR,
+	MALLOC_PHILO_OR_FORK_ERROR,
+	SETUP_STRUCT_ERROR,
+	EXEC_ERROR,
+	DESTROY_MUTEX_ERROR,
+}						t_return_value_main;
 
 typedef struct s_forks
 {
@@ -71,6 +81,7 @@ typedef struct s_settings
 	pthread_mutex_t		pasta_mutex;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		print_mutex;
+	bool				nbr_philo_odd;
 	bool				bool_pasta_mutex;
 	bool				bool_death_mutex;
 	bool				bool_print_mutex;
@@ -82,7 +93,8 @@ int						setup_philo_forks_struct(t_settings *settings,
 							t_philo *philo, t_forks *forks);
 int						free_structs(t_settings *set, t_philo *philo,
 							t_forks *forks, int return_value);
-int						destroy_mutex(t_settings *settings, t_philo *philo,
-							t_forks *forks, long i);
+int 					destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i);
+int						destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
+							long i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:34:54 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 14:53:44 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 09:41:06 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	msg_sleep_maxmeal_sleep_plus_eat(int return_value)
 	}
 }
 
-int	error_msg(t_settings *set, int return_value)
+int	error_msg(int return_value)
 {
 	if (return_value >= 2 && return_value <= 5)
 		msg_argc_philo_die_eat(return_value);
@@ -67,6 +67,5 @@ int	error_msg(t_settings *set, int return_value)
 	{
 		msg_sleep_maxmeal_sleep_plus_eat(return_value);
 	}
-	free(set);
 	return (RETURN_ERROR);
 }
