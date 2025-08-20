@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 15:42:21 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 07:39:52 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc, char *argv[])
 	set = malloc(sizeof(t_settings));
 	if (!set)
 	{
-		write(2, "main:30 : Malloc error\n", 24);
+		write(2, "main:36 : Malloc error\n", 24);
 		return (EXIT_FAILURE);
 	}
 	if (parsing(argc, argv, set))
@@ -41,12 +41,17 @@ int	main(int argc, char *argv[])
 	philo = malloc(sizeof(t_philo) * set->nbr_philo);
 	forks = malloc(sizeof(t_forks) * set->nbr_philo);
 	if (!philo || !forks)
-		return (free_structs(set, philo, forks, EXIT_FAILURE)); //TODO error msg about malloc errors
+	{
+		write(2, "main:45 : Malloc error for essential structures\n",49);
+		return (free_structs(set, philo, forks, EXIT_FAILURE));
+	}
 	if(setup_philo_forks_struct(set, philo, forks))
+	{
+		write(2, "main:50 : error during init of mutex\n", 38);
 		return(free_structs(set, philo, forks, EXIT_FAILURE));
+	}
 	philosopher(set, philo);
 	destroy_mutex(set, philo, forks, set->nbr_philo - 1); //devrait etre good enough
-	//destroy nos mutex?
 	free_structs(set, philo, forks, EXIT_SUCCESS);
 	return (EXIT_SUCCESS);
 }
