@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:50:22 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 14:57:10 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 07:53:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	if (argv[5])
 	{
 		set->max_meal = ft_atol(argv[5]);
-		if (set->max_meal < 0 || ft_strlen(argv[4]) > 16)
+		if (set->max_meal < 0 || ft_strlen(argv[5]) > 16) //revoir par rapport a la logique qu'on veut ici
 			return (INVALID_MAXMEAL);
 	}
 	else
@@ -74,16 +74,28 @@ static int check_if_num_val(char *argv[])
 	return(RETURN_SUCCESS);
 }
 
+// At first we look at if the user sent the right nbr of arguments
+// then we check if the user did enter only numbers and not letters
+// then we convert our type char argument into an usable type
+// and place them into our set struct
+// if there is any error during the process we print the necessary error msg
+// before exiting our program.
+
 int	parsing(int argc, char *argv[], t_settings *set)
 {
 	size_t	return_value;
 
 	if (argc > 6 || argc < 5)
-		return (error_msg(set, INVALID_ARGC));
+		return (error_msg(INVALID_ARGC));
 	if(check_if_num_val(argv))
-		return (error_msg(set, INVALID_NUM_VALUE));
+		return (error_msg(INVALID_NUM_VALUE));
 	return_value = convert_argv_to_struct_utils(argv, set);
 	if (return_value)
-		return (error_msg(set, return_value));
+		return (error_msg(return_value));
+	if (set->nbr_philo % 2 == 0)
+		set->nbr_philo_odd = true;
+	else
+		set->nbr_philo_odd = false;
+	set->start = false;
 	return (RETURN_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 13:10:07 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 10:49:09 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void    ft_usleep(long usec, t_settings *set)
 			pthread_mutex_lock(&set->print_mutex);
 			break;
 		}
-            
         usleep(100);
 		pthread_mutex_lock(&set->print_mutex);
     }
@@ -52,7 +51,7 @@ void	routine_take_fork(t_philo *philo, bool right)
 		while(!philo->right->available)
 		{
 			pthread_mutex_unlock(&philo->right->mutex);
-			usleep(250);
+			usleep(10);
 			pthread_mutex_lock(&philo->right->mutex);
 		}
 		philo->right->available = false;
@@ -65,7 +64,7 @@ void	routine_take_fork(t_philo *philo, bool right)
 		while(!philo->left->available)
 		{
 			pthread_mutex_unlock(&philo->left->mutex);
-			usleep(250);
+			usleep(10);
 			pthread_mutex_lock(&philo->left->mutex);
 		}
 		philo->left->available = false;
@@ -85,11 +84,13 @@ static time_t	fill_now_print(t_settings *set)
 static void	update_eat(t_philo *philo)
 {
 	struct timeval	tv;
+	time_t now;
 
 	philo->meals_eaten = philo->meals_eaten + 1;
-	pthread_mutex_lock(&philo->t_alive_mutex);
 	gettimeofday(&tv, NULL);
-	philo->t_alive = tv.tv_sec * 1000000 + tv.tv_usec;
+	now = tv.tv_sec * 1000000 + tv.tv_usec;
+	pthread_mutex_lock(&philo->t_alive_mutex);
+	philo->t_alive = now; /*tv.tv_sec * 1000000 + tv.tv_usec;*/
 	pthread_mutex_unlock(&philo->t_alive_mutex);
 	return ;
 }
@@ -101,8 +102,8 @@ void	print_msg_routine(t_philo *philo, size_t cases)
 	pthread_mutex_lock(&philo->set->print_mutex);
 	if (cases == IS_EATING && philo->set->death != true)
 	{
-		now = fill_now_print(philo->set);
 		update_eat(philo);
+		now = fill_now_print(philo->set);
 		printf("%ld %ld is eating\n", now / 1000, philo->id);
 	}
 	else if (cases == IS_THINKING && philo->set->death != true)

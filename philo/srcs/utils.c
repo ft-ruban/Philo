@@ -6,28 +6,54 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:23:13 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/18 11:34:13 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 09:52:56 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 #include "stdlib.h"
 
-static int	destroy_mutex(t_settings *settings, t_philo *philo, t_forks *forks,
-		long i)
+//TODO complete all mutex (pastamutex for ex)
+
+int destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i)
 {
-	if (settings->bool_print_mutex == true)
-		pthread_mutex_destroy(&settings->print_mutex);
-	if (settings->bool_death_mutex == true)
-		pthread_mutex_destroy(&settings->death_mutex);
 	while (i >= 0)
 	{
 		if (forks[i].bool_mutex == true)
-			pthread_mutex_destroy(&forks[i].mutex);
+		{
+			if(pthread_mutex_destroy(&forks[i].mutex))
+				return(RETURN_FAILURE);
+		}
 		if (philo[i].bool_alive_mutex == true)
-			pthread_mutex_destroy(&philo[i].t_alive_mutex);
+		{
+			if(pthread_mutex_destroy(&philo[i].t_alive_mutex))
+				return(RETURN_FAILURE);
+		}
 		i--;
 	}
+	return(RETURN_SUCCESS);
+}
+
+int	destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
+		long i)
+{
+	if (settings->bool_print_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->print_mutex))
+			return (RETURN_FAILURE);
+	}
+	if (settings->bool_death_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->death_mutex))
+			return (RETURN_FAILURE);
+	}
+	if (settings->bool_pasta_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->pasta_mutex))
+			return(RETURN_FAILURE);
+	}
+	if(destroy_mutex_nodes(philo, forks, i))
+		return(RETURN_FAILURE);
 	return (RETURN_FAILURE);
 }
 
@@ -58,18 +84,21 @@ static int	setup_last_node(t_settings *settings, t_philo *philo,
 	philo[i].set = settings;
 	forks[i].id = i + 1;
 	if (pthread_mutex_init(&forks[i].mutex, NULL))
-		return (destroy_mutex(settings, philo, forks, i));
+		return (destroy_mutex_fail(settings, philo, forks, i));
 	forks[i].bool_mutex = true;
 	if (pthread_mutex_init(&philo[i].t_alive_mutex, NULL))
-		return (destroy_mutex(settings, philo, forks, i));
+		return (destroy_mutex_fail(settings, philo, forks, i));
 	philo[i].bool_alive_mutex = true;
 	forks[i].next = NULL;
 	if (pthread_mutex_init(&philo[i].set->print_mutex, NULL))
-		return (destroy_mutex(settings, philo, forks, i));
+		return (destroy_mutex_fail(settings, philo, forks, i));
 	philo[i].set->bool_print_mutex = true;
 	if (pthread_mutex_init(&philo[i].set->death_mutex, NULL))
-		return (destroy_mutex(settings, philo, forks, i));
+		return (destroy_mutex_fail(settings, philo, forks, i));
 	philo[i].set->bool_death_mutex = true;
+	if (pthread_mutex_init(&philo->set->pasta_mutex, NULL))
+		return (destroy_mutex_fail(settings, philo, forks, i));
+	philo[i].set->bool_pasta_mutex = true;
 	return (RETURN_SUCCESS);
 }
 
@@ -90,10 +119,10 @@ int	setup_philo_forks_struct(t_settings *settings, t_philo *philo,
 		philo[i].set = settings;
 		forks[i].id = i + 1;
 		if (pthread_mutex_init(&forks[i].mutex, NULL))
-			return (destroy_mutex(settings, philo, forks, i));
+			return (destroy_mutex_fail(settings, philo, forks, i));
 		forks[i].bool_mutex = true;
 		if (pthread_mutex_init(&philo[i].t_alive_mutex, NULL))
-			return (destroy_mutex(settings, philo, forks, i));
+			return (destroy_mutex_fail(settings, philo, forks, i));
 		philo[i].bool_alive_mutex = true;
 		forks[i].next = &forks[i + 1];
 		i++;
