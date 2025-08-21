@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 08:17:32 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 08:11:54 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 #include <sys/time.h> //gettingtimeofdayneedit
 #include <unistd.h>   //usleep
 
-static long	fill_now_variable(long *now)
-{
-	struct timeval	tv;
+//may be obsolete here
+// static long	fill_now_variable(long *now)
+// {
+// 	struct timeval	tv;
 
-	if(gettimeofday(&tv, NULL))
-		return(RETURN_FAILURE);
-	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
-	return (RETURN_SUCCESS);
-}
+// 	if(gettimeofday(&tv, NULL))
+// 		return(RETURN_FAILURE);
+// 	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
+// 	return (RETURN_SUCCESS);
+// }
 
 static int cleanup_threads_on_error(t_philo *philo, t_philo *head)
 {
@@ -40,14 +41,17 @@ static int cleanup_threads_on_error(t_philo *philo, t_philo *head)
 
 static int	creating_thread(t_philo *philo, bool even, long now, t_philo *head)
 {
+	struct timeval	tv;
+	
+	now = 13;
 	head = philo;
 	while (philo)
 	{
-		if(fill_now_variable(&now))
-			return(cleanup_threads_on_error(philo, head));
-		pthread_mutex_lock(&philo->t_alive_mutex);
-		philo->t_alive = now;
-		pthread_mutex_unlock(&philo->t_alive_mutex);
+		// if(fill_now_variable(&now))
+		// 	return(cleanup_threads_on_error(philo, head));
+		// pthread_mutex_lock(&philo->t_alive_mutex);
+		// philo->t_alive = now;
+		// pthread_mutex_unlock(&philo->t_alive_mutex);
 		if (even)
 		{
 			if (pthread_create(&philo->thread_id, NULL, &routine_even,
@@ -64,6 +68,17 @@ static int	creating_thread(t_philo *philo, bool even, long now, t_philo *head)
 		}
 		philo = philo->next;
 	}
+	pthread_mutex_lock(&head->set->print_mutex);
+	head->set->start = true;
+	if(gettimeofday(&tv, NULL))
+		return(RETURN_FAILURE);
+	head->set->subunit = tv.tv_sec;
+	head->set->subusec = tv.tv_usec;
+	if(gettimeofday(&tv, NULL))
+		return(RETURN_FAILURE);
+	head->set->time_passed = (tv.tv_sec - head->set->subunit) * 1000000 + (tv.tv_usec
+			- head->set->subusec);
+	pthread_mutex_unlock(&head->set->print_mutex);
 	return (RETURN_SUCCESS);
 }
 
@@ -102,16 +117,7 @@ static int	wait_all_thread(t_philo *philo)
 
 int	philosopher(t_settings *set, t_philo *philo)
 {
-	struct timeval	tv;
-
-	if(gettimeofday(&tv, NULL))
-		return(RETURN_FAILURE);
-	set->subunit = tv.tv_sec;
-	set->subusec = tv.tv_usec;
-	if(gettimeofday(&tv, NULL))
-		return(RETURN_FAILURE);
-	set->time_passed = (tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec
-			- set->subusec);
+	set->bool_death_mutex = true;
 	if (prepare_creation_thread(philo, NULL, true))
 		return (RETURN_FAILURE);
 	if (wait_all_thread(philo))

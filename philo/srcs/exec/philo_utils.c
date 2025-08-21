@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 16:12:09 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 10:49:09 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	routine_take_fork(t_philo *philo, bool right)
 		while(!philo->right->available)
 		{
 			pthread_mutex_unlock(&philo->right->mutex);
-			usleep(200);
+			usleep(10);
 			pthread_mutex_lock(&philo->right->mutex);
 		}
 		philo->right->available = false;
@@ -64,7 +64,7 @@ void	routine_take_fork(t_philo *philo, bool right)
 		while(!philo->left->available)
 		{
 			pthread_mutex_unlock(&philo->left->mutex);
-			usleep(200);
+			usleep(10);
 			pthread_mutex_lock(&philo->left->mutex);
 		}
 		philo->left->available = false;

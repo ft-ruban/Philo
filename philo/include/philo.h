@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:16:55 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 14:16:21 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 07:52:46 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_settings
 	pthread_mutex_t		pasta_mutex;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		print_mutex;
+	bool 				start;
 	bool				nbr_philo_odd;
 	bool				bool_pasta_mutex;
 	bool				bool_death_mutex;

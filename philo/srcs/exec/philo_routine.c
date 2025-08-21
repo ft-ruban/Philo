@@ -6,10 +6,11 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 15:20:20 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 11:05:36 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/time.h> //gettingtimeofday
 #include "exec.h"
 #include <unistd.h> //usleep
 
@@ -17,7 +18,7 @@ static void	think_fork_even(t_philo *philo
 		,bool *break_loop)
 {
 	//print_msg_routine(philo, IS_THINKING);
-	usleep(500); //check si avec odd ca marche
+	//usleep(500); //check si avec odd ca marche
 	routine_take_fork(philo, false);
 	if (philo->right->id == philo->left->id)
 	{
@@ -26,7 +27,8 @@ static void	think_fork_even(t_philo *philo
 	}
 	routine_take_fork(philo, true);
 	print_msg_routine(philo, IS_EATING);
-	ft_usleep(philo->set->t_eat,philo->set);
+	usleep(philo->set->t_eat);
+	//ft_usleep(philo->set->t_eat,philo->set);
 	pthread_mutex_lock(&philo->left->mutex);
 	philo->left->available = true;
 	pthread_mutex_unlock(&philo->left->mutex);
@@ -50,7 +52,8 @@ static void	think_fork_odd(t_philo *philo/*, bool first_iteration*/)
 	routine_take_fork(philo, true);
 	routine_take_fork(philo, false);
 	print_msg_routine(philo, IS_EATING);
-	ft_usleep(philo->set->t_eat,philo->set);
+	usleep(philo->set->t_eat);
+	//ft_usleep(philo->set->t_eat,philo->set);
 	pthread_mutex_lock(&philo->right->mutex);
 	philo->right->available = true;
 	pthread_mutex_unlock(&philo->right->mutex);
@@ -59,14 +62,47 @@ static void	think_fork_odd(t_philo *philo/*, bool first_iteration*/)
 	pthread_mutex_unlock(&philo->left->mutex);
 }
 
+static long	fill_now_variable(long *now)
+{
+	struct timeval	tv;
+
+	if(gettimeofday(&tv, NULL))
+		return(RETURN_FAILURE);
+	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (RETURN_SUCCESS);
+}
+
+static int wait_all_threads(t_settings *set, t_philo *philo)
+{
+	long now;
+
+	now = 0;
+	pthread_mutex_lock(&set->print_mutex);
+	while(!set->start)
+	{
+		pthread_mutex_unlock(&set->print_mutex);
+		usleep(1);
+		pthread_mutex_lock(&set->print_mutex);
+	}
+	pthread_mutex_unlock(&set->print_mutex);
+	if(fill_now_variable(&now))
+		return(RETURN_FAILURE);
+	pthread_mutex_lock(&philo->t_alive_mutex);
+	philo->t_alive = now;
+	pthread_mutex_unlock(&philo->t_alive_mutex);
+	return(RETURN_SUCCESS);
+}
+
 void	*routine_odd(void *arg)
 {
 	t_philo	*philo;
 	bool	first_iteration;
 
 	philo = (t_philo *)arg;
+	wait_all_threads(philo->set, philo);
 	print_msg_routine(philo, IS_THINKING);
-	usleep(philo->set->t_eat / 2);
+	if(philo->set->nbr_philo_odd)
+		usleep(philo->set->t_eat / 2);
 	first_iteration = true;
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
@@ -74,10 +110,13 @@ void	*routine_odd(void *arg)
 		pthread_mutex_unlock(&philo->set->death_mutex);
 		think_fork_odd(philo/*, first_iteration*/);
 		print_msg_routine(philo, IS_SLEEPING);
-		ft_usleep(philo->set->t_sleep,philo->set);
+		usleep(philo->set->t_sleep);
+		//ft_usleep(philo->set->t_sleep,philo->set);
 		print_msg_routine(philo, IS_THINKING);
 		if(!philo->set->nbr_philo_odd)
-			usleep(philo->set->t_eat / 2);
+			usleep(philo->set->t_eat);
+		// else
+		// 	usleep(100);
 		first_iteration = false;
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
@@ -97,8 +136,9 @@ void	*routine_even(void *arg)
 
 	first_iteration = true;
 	philo = (t_philo *)arg;
+	wait_all_threads(philo->set, philo);
 	print_msg_routine(philo, IS_THINKING);
-	usleep(philo->set->t_eat / 4);
+	usleep(philo->set->t_eat / 4); //si  NOT ODD
 	break_loop = false;
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
@@ -108,10 +148,13 @@ void	*routine_even(void *arg)
 		if (break_loop)
 			break ;
 		print_msg_routine(philo, IS_SLEEPING);
-		ft_usleep(philo->set->t_sleep,philo->set);
+		usleep(philo->set->t_sleep);
+		//ft_usleep(philo->set->t_sleep,philo->set);
 		print_msg_routine(philo, IS_THINKING);
 		if (!philo->set->nbr_philo_odd)
-			usleep(philo->set->t_eat / 2);
+			usleep(philo->set->t_eat);
+		// else
+		// 	usleep(100);
 		first_iteration = false;
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}

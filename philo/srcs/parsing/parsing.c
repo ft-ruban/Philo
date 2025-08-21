@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:50:22 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 14:17:36 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 07:53:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ int	parsing(int argc, char *argv[], t_settings *set)
 		set->nbr_philo_odd = true;
 	else
 		set->nbr_philo_odd = false;
+	set->start = false;
 	return (RETURN_SUCCESS);
 }
