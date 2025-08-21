@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 10:02:42 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 16:16:15 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	main(int argc, char *argv[])
 		return(free_write_then_exit_program(MALLOC_PHILO_OR_FORK_ERROR, set, philo, NULL));
 	if(setup_philo_forks_struct(set, philo, forks))
 		return(free_write_then_exit_program(SETUP_STRUCT_ERROR, set, philo, forks));
-	if(philosopher(set, philo))
+	if(prepare_creation_thread(philo, philo, true))
 		return(free_write_then_exit_program(EXEC_ERROR, set, philo, forks));
 	if(destroy_mutex_success(set, philo, forks, set->nbr_philo - 1))
 		return(free_write_then_exit_program(DESTROY_MUTEX_ERROR, set, philo, forks));

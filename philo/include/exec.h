@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:28 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 10:38:53 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 16:15:18 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ void	ft_usleep(long usec, t_settings *set);
 // philo.c
 void	*routine_odd(void *arg);
 void	*routine_even(void *arg);
-int	philosopher(t_settings *set, t_philo *philo);
+int		prepare_creation_thread(t_philo *philo, t_philo *tmp, bool even);
 
 #endif
