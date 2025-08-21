@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 08:11:54 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 12:23:34 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,13 @@ static int cleanup_threads_on_error(t_philo *philo, t_philo *head)
 	return(RETURN_FAILURE);
 }
 
-static int	creating_thread(t_philo *philo, bool even, long now, t_philo *head)
+static int	creating_thread(t_philo *philo, bool even, t_philo *head)
 {
 	struct timeval	tv;
 	
-	now = 13;
 	head = philo;
 	while (philo)
 	{
-		// if(fill_now_variable(&now))
-		// 	return(cleanup_threads_on_error(philo, head));
-		// pthread_mutex_lock(&philo->t_alive_mutex);
-		// philo->t_alive = now;
-		// pthread_mutex_unlock(&philo->t_alive_mutex);
 		if (even)
 		{
 			if (pthread_create(&philo->thread_id, NULL, &routine_even,
@@ -85,7 +79,7 @@ static int	creating_thread(t_philo *philo, bool even, long now, t_philo *head)
 static int	prepare_creation_thread(t_philo *philo, t_philo *tmp, bool even)
 {
 	tmp = philo;
-	if(creating_thread(philo, even, 0, NULL))
+	if(creating_thread(philo, even, philo))
 		return(RETURN_FAILURE);
 	if (pthread_create(&tmp->set->monitor_thread_id, NULL, &philo_monitor,
 			tmp) != 0)

@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 11:05:36 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 12:41:32 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ void	*routine_even(void *arg)
 	philo = (t_philo *)arg;
 	wait_all_threads(philo->set, philo);
 	print_msg_routine(philo, IS_THINKING);
-	usleep(philo->set->t_eat / 4); //si  NOT ODD
+	usleep(philo->set->t_eat / 6); //si  NOT ODD
 	break_loop = false;
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)

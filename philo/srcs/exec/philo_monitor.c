@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:24:01 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 10:19:15 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 13:48:26 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	*philo_monitor(void *arg)
 		&& start->set->philo_full_pasta != start->set->nbr_philo)
 	{
 		pthread_mutex_unlock(&start->set->pasta_mutex);
-		usleep(1000);
+		usleep(500);
 		tmp = start;
 		now = 0;
 		if (philo_monitor_loop_threads(tmp, now))
