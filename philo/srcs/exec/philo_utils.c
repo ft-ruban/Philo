@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 10:49:09 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/22 10:45:30 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,34 @@
 #include <sys/time.h> //getting time of day need it
 #include <unistd.h>   //usleep
 
-long    get_time_in_us(void)
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (tv.tv_sec * 1000000L + tv.tv_usec);
-}
+// long    get_time_in_us(void)
+// {
+//     struct timeval tv;
+//     gettimeofday(&tv, NULL);
+//     return (tv.tv_sec * 1000000L + tv.tv_usec);
+// }
 
-void    ft_usleep(long usec, t_settings *set)
-{
-    long start;
-    long now;
+// void    ft_usleep(long usec, t_settings *set)
+// {
+//     long start;
+//     long now;
 
-    start = get_time_in_us();
-	pthread_mutex_lock(&set->print_mutex);
-    while (!set->death)
-    {
-		pthread_mutex_unlock(&set->print_mutex);
-        now = get_time_in_us();
-        if (now - start >= usec)
-		{
-			pthread_mutex_lock(&set->print_mutex);
-			break;
-		}
-        usleep(100);
-		pthread_mutex_lock(&set->print_mutex);
-    }
-	pthread_mutex_unlock(&set->print_mutex);
-}
+//     start = get_time_in_us();
+// 	pthread_mutex_lock(&set->print_mutex);
+//     while (!set->death)
+//     {
+// 		pthread_mutex_unlock(&set->print_mutex);
+//         now = get_time_in_us();
+//         if (now - start >= usec)
+// 		{
+// 			pthread_mutex_lock(&set->print_mutex);
+// 			break;
+// 		}
+//         usleep(100);
+// 		pthread_mutex_lock(&set->print_mutex);
+//     }
+// 	pthread_mutex_unlock(&set->print_mutex);
+// }
 
 void	routine_take_fork(t_philo *philo, bool right)
 {
@@ -56,7 +56,6 @@ void	routine_take_fork(t_philo *philo, bool right)
 		}
 		philo->right->available = false;
 		pthread_mutex_unlock(&philo->right->mutex);
-		print_msg_routine(philo, IS_TAKING_FORK);
 	}
 	else
 	{
@@ -69,8 +68,8 @@ void	routine_take_fork(t_philo *philo, bool right)
 		}
 		philo->left->available = false;
 		pthread_mutex_unlock(&philo->left->mutex);
-		print_msg_routine(philo, IS_TAKING_FORK);
 	}
+	print_msg_routine(philo, IS_TAKING_FORK);
 }
 
 static time_t	fill_now_print(t_settings *set)

@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 16:16:15 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/22 10:27:40 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static int	destroy_mutex_success(t_settings *settings, t_philo *philo, t_forks *
 
 static int free_write_then_exit_program(int error_type, t_settings *set, t_philo *philo, t_forks *forks)
 {
-	free_structs(set, philo, forks, EXIT_FAILURE);
 	if (error_type == MALLOC_SET_ERROR)
 		write(2, "main:36 : Malloc error for essential structure\n", 24);
 	else if (error_type == PARSING_ERROR)
@@ -60,11 +59,12 @@ static int free_write_then_exit_program(int error_type, t_settings *set, t_philo
 		write(2, "main:50 : error during init of mutex\n", 38);
 	else if (error_type == EXEC_ERROR)
 	{
-		write(2, "main:xx : error during the execution of philosopher", 54);
+		write(2, "main:xx : error during the execution of philosopher", 52);
 		destroy_mutex_fail(set, philo, forks, set->nbr_philo - 1);
 	}
 	else if (error_type == DESTROY_MUTEX_ERROR)
 		write(2, "main:xx : error during destruction of mutex", 46);
+	free_structs(set, philo, forks, EXIT_FAILURE);
 	return(error_type);
 }
 
