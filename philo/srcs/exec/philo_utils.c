@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "exec.h"
-#include <sys/time.h> //getting time of day need it
-#include <unistd.h>   //usleep
+//#include <sys/time.h> //getting time of day need it
+//#include <unistd.h>   //usleep
 
 // long    get_time_in_us(void)
 // {
@@ -43,6 +43,9 @@
 // 	pthread_mutex_unlock(&set->print_mutex);
 // }
 
+//handle everything related to the forks availability
+//waiting for it to be available and setup the bool
+
 void	routine_take_fork(t_philo *philo, bool right)
 {
 	if (right)
@@ -72,6 +75,8 @@ void	routine_take_fork(t_philo *philo, bool right)
 	print_msg_routine(philo, IS_TAKING_FORK);
 }
 
+//to fill now variable that would be used for timestamp
+
 static time_t	fill_now_print(t_settings *set)
 {
 	struct timeval	tv;
@@ -79,6 +84,8 @@ static time_t	fill_now_print(t_settings *set)
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec - set->subusec));
 }
+
+//reset time_alive and add a + 1 to meal count
 
 static void	update_eat(t_philo *philo)
 {
@@ -93,6 +100,12 @@ static void	update_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->t_alive_mutex);
 	return ;
 }
+
+//here this handle all the printing msg
+//related to the project, as eat sleep
+//forks think... it also reset the time
+//alice of philos right bfr printing the eating
+//msg
 
 void	print_msg_routine(t_philo *philo, size_t cases)
 {

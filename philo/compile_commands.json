@@ -1,0 +1,56 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-I",
+      "include",
+      "-c",
+      "-o",
+      ".objs/exec/philo_routine.o",
+      "srcs/exec/philo_routine.c"
+    ],
+    "directory": "/home/ruban/projects/42/circle_4/Philo/philo",
+    "file": "/home/ruban/projects/42/circle_4/Philo/philo/srcs/exec/philo_routine.c",
+    "output": "/home/ruban/projects/42/circle_4/Philo/philo/.objs/exec/philo_routine.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-I",
+      "include",
+      "-c",
+      "-o",
+      ".objs/exec/philo.o",
+      "srcs/exec/philo.c"
+    ],
+    "directory": "/home/ruban/projects/42/circle_4/Philo/philo",
+    "file": "/home/ruban/projects/42/circle_4/Philo/philo/srcs/exec/philo.c",
+    "output": "/home/ruban/projects/42/circle_4/Philo/philo/.objs/exec/philo.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-I",
+      "include",
+      "-c",
+      "-o",
+      ".objs/exec/philo_utils.o",
+      "srcs/exec/philo_utils.c"
+    ],
+    "directory": "/home/ruban/projects/42/circle_4/Philo/philo",
+    "file": "/home/ruban/projects/42/circle_4/Philo/philo/srcs/exec/philo_utils.c",
+    "output": "/home/ruban/projects/42/circle_4/Philo/philo/.objs/exec/philo_utils.o"
+  }
+]

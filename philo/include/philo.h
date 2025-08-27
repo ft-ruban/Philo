@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 //#include <unistd.h>
+#include "stdlib.h"
 # include <pthread.h>
 # include <stdbool.h>
 
@@ -89,13 +90,18 @@ typedef struct s_settings
 	bool				death;
 }						t_settings;
 
-// utils.c
+// setup.c
+
 int						setup_philo_forks_struct(t_settings *settings,
 							t_philo *philo, t_forks *forks);
+
+// utils.c
 int						free_structs(t_settings *set, t_philo *philo,
 							t_forks *forks, int return_value);
 int 					destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i);
 int						destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
 							long i);
-
+int 					free_write_then_exit_program(int error_type, t_settings *set, t_philo *philo, t_forks *forks);
+int	destroy_mutex_success(t_settings *settings, t_philo *philo, t_forks *forks,
+		long i);
 #endif

@@ -11,29 +11,10 @@
 /* ************************************************************************** */
 
 #include "../include/parsing.h"
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <unistd.h>
 
-static void	msg_argc_philo_die_eat(int return_value)
-{
-	if (return_value == INVALID_ARGC)
-		write(2, "philo: INVALID_ARGC: only support 4 or 5 parameters\n", 53);
-	else if (return_value == INVALID_PHILO)
-	{
-		write(2, "philo: INVALID_PHILO: ", 23);
-		write(2, "invalid input enter a value between 1 and 250\n", 47);
-	}
-	else if (return_value == INVALID_DIE)
-	{
-		write(2, "philo: INVALID_DIE: invalid input ", 35);
-		write(2, "enter a value between 0 and 9223372036854775 ms\n", 49);
-	}
-	else if (return_value == INVALID_EAT)
-	{
-		write(2, "philo: INVALID_EAT: invalid input enter", 40);
-		write(2, " a value between 0 and 9223372036854775 ms\n", 44);
-	}
-}
+//write in fd 2 the right error msg
 
 static void	msg_sleep_maxmeal_sleep_plus_eat(int return_value)
 {
@@ -59,13 +40,37 @@ static void	msg_sleep_maxmeal_sleep_plus_eat(int return_value)
 	}
 }
 
+//write in fd 2 the right error msg
+
+static void	msg_argc_philo_die_eat(int return_value)
+{
+	if (return_value == INVALID_ARGC)
+		write(2, "philo: INVALID_ARGC: only support 4 or 5 parameters\n", 53);
+	else if (return_value == INVALID_PHILO)
+	{
+		write(2, "philo: INVALID_PHILO: ", 23);
+		write(2, "invalid input enter a value between 1 and 250\n", 47);
+	}
+	else if (return_value == INVALID_DIE)
+	{
+		write(2, "philo: INVALID_DIE: invalid input ", 35);
+		write(2, "enter a value between 0 and 9223372036854775 ms\n", 49);
+	}
+	else if (return_value == INVALID_EAT)
+	{
+		write(2, "philo: INVALID_EAT: invalid input enter", 40);
+		write(2, " a value between 0 and 9223372036854775 ms\n", 44);
+	}
+}
+
+//here we redirect the program at the right place to write
+//the right error msg 
+
 int	error_msg(int return_value)
 {
 	if (return_value >= 2 && return_value <= 5)
 		msg_argc_philo_die_eat(return_value);
 	else
-	{
 		msg_sleep_maxmeal_sleep_plus_eat(return_value);
-	}
 	return (RETURN_ERROR);
 }

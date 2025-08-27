@@ -14,6 +14,9 @@
 # define EXEC_H
 
 # include "philo.h"
+#include <sys/time.h>
+#include <unistd.h>
+
 
 #define THINK_DELAY 150
 

@@ -10,9 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/time.h> //gettingtimeofday
+//#include <sys/time.h> //gettingtimeofday
 #include "exec.h"
-#include <unistd.h> //usleep
+//#include <unistd.h> //usleep
+
+//here odd philo take their left forks then right
+//also quick checker in case we just have a single philo
+//bcs in that case forks id left and right is the same
+//eat, and make there forks available once more.
 
 static void	fork_eat_even(t_philo *philo
 		,bool *break_loop)
@@ -35,6 +40,9 @@ static void	fork_eat_even(t_philo *philo
 	pthread_mutex_unlock(&philo->right->mutex);
 }
 
+//here odd philo take their right forks then left
+//eat, and make there forks available once more
+
 static void	fork_eat_odd(t_philo *philo)
 {
 	routine_take_fork(philo, true);
@@ -50,6 +58,9 @@ static void	fork_eat_odd(t_philo *philo)
 	pthread_mutex_unlock(&philo->left->mutex);
 }
 
+//fill the now variable that would be used to 
+//give right timer of our philo
+
 static long	fill_now_variable(long *now)
 {
 	struct timeval	tv;
@@ -59,6 +70,9 @@ static long	fill_now_variable(long *now)
 	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
 	return (RETURN_SUCCESS);
 }
+
+//here in that function our thread wait until all threads are
+//created once they get we setup their timer
 
 static int wait_all_threads(t_settings *set, t_philo *philo)
 {
@@ -81,17 +95,25 @@ static int wait_all_threads(t_settings *set, t_philo *philo)
 	return(RETURN_SUCCESS);
 }
 
+//this is where our odd philo's threads would start.
+//at first they wait in wait all thread until all threads
+//are created. then it start to think, a usleep of t_eat / 2
+//is required WHEN the total nbr of philo is odd
+//for opti purpose in such case
+//then we get into our while loop that represent the general routine
+//of our even_nbr philo's threads
+
 void	*routine_odd(void *arg)
 {
 	t_philo	*philo;
-	bool	first_iteration;
+	//bool	first_iteration;
 
 	philo = (t_philo *)arg;
 	wait_all_threads(philo->set, philo);
 	print_msg_routine(philo, IS_THINKING);
 	if(philo->set->nbr_philo_odd)
 		usleep(philo->set->t_eat / 2);
-	first_iteration = true;
+	//first_iteration = true;
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
@@ -105,7 +127,7 @@ void	*routine_odd(void *arg)
 			usleep(philo->set->t_eat);
 		// else
 		// 	usleep(100);
-		first_iteration = false;
+		//first_iteration = false;
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
 	pthread_mutex_unlock(&philo->set->death_mutex);
@@ -115,6 +137,13 @@ void	*routine_odd(void *arg)
 	pthread_mutex_unlock(&philo->set->pasta_mutex);
 	return (0);
 }
+
+//this is where our even philo's threads would start.
+//at first they wait in wait all thread until all threads
+//are created. then it start to think, a usleep of t_eat / 6
+//is required for the start of the routine for opti purpose
+//then we get into our while loop that represent the general routine
+//of our even_nbr philo's threads
 
 void	*routine_even(void *arg)
 {

@@ -43,5 +43,7 @@ int		parsing(int argc, char *argv[], t_settings *set);
 // parsing_utils.c
 long	ft_atol(const char *nptr);
 size_t	ft_strlen(const char *s);
+int		ft_isnum(int c);
+
 
 #endif

@@ -12,6 +12,10 @@
 
 #include "../include/parsing.h"
 
+//convert the argv into usable values for our
+//set structure (also convert into microsecond most
+//values to make them usable by usleep function)
+
 static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 {
 	set->death = false;
@@ -41,13 +45,11 @@ static int	convert_argv_to_struct_utils(char *argv[], t_settings *set)
 	return (RETURN_SUCCESS);
 }
 
-static int	ft_isnum(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (RETURN_SUCCESS);
-	else
-		return (RETURN_ERROR);
-}
+//here we check if the argument given 
+//are numeric values, it check all the chars
+//of all arguments and if anything is not char
+//that represent a num value (0-9) would return 1
+//to make the program leave with the right error msg
 
 static int check_if_num_val(char *argv[])
 {

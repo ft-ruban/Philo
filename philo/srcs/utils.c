@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-#include "stdlib.h"
+//#include "stdlib.h"
+#include <unistd.h>
 
 //TODO complete all mutex (pastamutex for ex)
 
@@ -57,79 +58,6 @@ int	destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
 	return (RETURN_FAILURE);
 }
 
-static void	setup_bools(t_philo *philo, t_forks *forks, t_settings *set)
-{
-	long	i;
-
-	i = 0;
-	while (i < set->nbr_philo)
-	{
-		forks[i].available = true;
-		forks[i].bool_mutex = false;
-		philo[i].bool_alive_mutex = false;
-		i++;
-	}
-	set->bool_print_mutex = false;
-	set->bool_death_mutex = false;
-}
-
-static int	setup_last_node(t_settings *settings, t_philo *philo,
-		t_forks *forks, long i)
-{
-	philo[i].id = i + 1;
-	philo[i].meals_eaten = 0;
-	philo[i].left = &forks[i];
-	philo[i].right = &forks[0];
-	philo[i].next = NULL;
-	philo[i].set = settings;
-	forks[i].id = i + 1;
-	if (pthread_mutex_init(&forks[i].mutex, NULL))
-		return (destroy_mutex_fail(settings, philo, forks, i));
-	forks[i].bool_mutex = true;
-	if (pthread_mutex_init(&philo[i].t_alive_mutex, NULL))
-		return (destroy_mutex_fail(settings, philo, forks, i));
-	philo[i].bool_alive_mutex = true;
-	forks[i].next = NULL;
-	if (pthread_mutex_init(&philo[i].set->print_mutex, NULL))
-		return (destroy_mutex_fail(settings, philo, forks, i));
-	philo[i].set->bool_print_mutex = true;
-	if (pthread_mutex_init(&philo[i].set->death_mutex, NULL))
-		return (destroy_mutex_fail(settings, philo, forks, i));
-	philo[i].set->bool_death_mutex = true;
-	if (pthread_mutex_init(&philo->set->pasta_mutex, NULL))
-		return (destroy_mutex_fail(settings, philo, forks, i));
-	philo[i].set->bool_pasta_mutex = true;
-	return (RETURN_SUCCESS);
-}
-
-int	setup_philo_forks_struct(t_settings *settings, t_philo *philo,
-		t_forks *forks)
-{
-	long	i;
-
-	i = 0;
-	setup_bools(philo, forks, settings);
-	while (i < settings->nbr_philo - 1)
-	{
-		philo[i].id = i + 1;
-		philo[i].meals_eaten = 0;
-		philo[i].left = &forks[i];
-		philo[i].right = &forks[i + 1];
-		philo[i].next = &philo[i + 1];
-		philo[i].set = settings;
-		forks[i].id = i + 1;
-		if (pthread_mutex_init(&forks[i].mutex, NULL))
-			return (destroy_mutex_fail(settings, philo, forks, i));
-		forks[i].bool_mutex = true;
-		if (pthread_mutex_init(&philo[i].t_alive_mutex, NULL))
-			return (destroy_mutex_fail(settings, philo, forks, i));
-		philo[i].bool_alive_mutex = true;
-		forks[i].next = &forks[i + 1];
-		i++;
-	}
-	return (setup_last_node(settings, philo, forks, i));
-}
-
 int	free_structs(t_settings *set, t_philo *philo, t_forks *forks,
 		int return_value)
 {
@@ -140,4 +68,59 @@ int	free_structs(t_settings *set, t_philo *philo, t_forks *forks,
 	if (forks)
 		free(forks);
 	return (return_value);
+}
+
+//Function that will destroy all our mutex in case of a successful parsing
+//similar to destroy_mutex_failure, difference here is 
+//the importance of return value
+int	destroy_mutex_success(t_settings *settings, t_philo *philo, t_forks *forks,
+		long i)
+{
+	if (settings->bool_print_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->print_mutex))
+			return (RETURN_FAILURE);
+	}
+	if (settings->bool_death_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->death_mutex))
+			return (RETURN_FAILURE);
+	}
+	if (settings->bool_pasta_mutex == true)
+	{
+		if(pthread_mutex_destroy(&settings->pasta_mutex))
+			return(RETURN_FAILURE);
+	}
+	if(destroy_mutex_nodes(philo, forks, i))
+		return(RETURN_FAILURE);
+	return (RETURN_SUCCESS);
+}
+
+
+//would free the necessary structs then write the associated err
+//msg before returning the right type ending the program
+//bcs this should only be called in the main function
+
+int free_write_then_exit_program(int error_type, t_settings *set, t_philo *philo, t_forks *forks)
+{
+	if (error_type == MALLOC_SET_ERROR)
+		write(2, "main:36 : Malloc error for essential structure\n", 24);
+	else if (error_type == PARSING_ERROR)
+	{
+		free(set);
+		return(2);
+	}
+	else if (error_type == MALLOC_PHILO_OR_FORK_ERROR)
+		write(2, "main:45 : Malloc error for essential structures\n",49);
+	else if (error_type == SETUP_STRUCT_ERROR)
+		write(2, "main:50 : error during init of mutex\n", 38);
+	else if (error_type == EXEC_ERROR)
+	{
+		write(2, "main:xx : error during the execution of philosopher", 52);
+		destroy_mutex_fail(set, philo, forks, set->nbr_philo - 1);
+	}
+	else if (error_type == DESTROY_MUTEX_ERROR)
+		write(2, "main:xx : error during destruction of mutex", 44);
+	free_structs(set, philo, forks, EXIT_FAILURE);
+	return(error_type);
 }

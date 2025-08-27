@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "exec.h"
-#include <sys/time.h>
-#include <unistd.h> //usleep
+//#include <sys/time.h>
+//#include <unistd.h> //usleep
 
 //duplicata dans philo_routine
 static long	fill_now_variable(long *now)
@@ -57,12 +57,18 @@ static int	philo_monitor_loop_threads(t_philo *tmp, long now)
 	return (RETURN_SUCCESS);
 }
 
+//here is the monitor that is used to check
+//whenever a philo is dead to make everything stop as asked
+//it only leave it's loop if all philo ate the right amount of food
+//or if a philo died.
+
 void	*philo_monitor(void *arg)
 {
 	t_philo			*tmp;
 	t_philo			*start;
 	long			now;
 
+	now = 0;
 	start = arg;
 	tmp = arg;
 	usleep(tmp->set->t_die);
@@ -73,7 +79,6 @@ void	*philo_monitor(void *arg)
 		pthread_mutex_unlock(&start->set->pasta_mutex);
 		usleep(500);
 		tmp = start;
-		now = 0;
 		if (philo_monitor_loop_threads(tmp, now))
 			return (NULL);
 		//usleep(tmp->set->t_die / 2);

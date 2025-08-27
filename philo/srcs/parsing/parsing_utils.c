@@ -36,6 +36,8 @@ long	convert_ascii_to_long(int i, const char *nptr, int negative)
 		result *= -1;
 	return (result);
 }
+//convert given string of char into long type
+//doesnt handle overflow need to do it outside the function
 
 long	ft_atol(const char *nptr)
 {
@@ -55,6 +57,8 @@ long	ft_atol(const char *nptr)
 	return (convert_ascii_to_long(i, nptr, negative));
 }
 
+//return the total length of a given string of char
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	len;
@@ -63,4 +67,15 @@ size_t	ft_strlen(const char *s)
 	while (s[len] != '\0')
 		len++;
 	return (len);
+}
+
+//Check if the c number code in the ascii table
+//is a number between 0 and 9
+
+int	ft_isnum(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (RETURN_SUCCESS);
+	else
+		return (RETURN_ERROR);
 }
