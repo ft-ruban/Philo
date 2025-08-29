@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:24:01 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 13:48:26 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/29 08:57:04 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 //#include <unistd.h> //usleep
 
 //duplicata dans philo_routine
-static long	fill_now_variable(long *now)
-{
-	struct timeval	tv;
+// static long	fill_now_variable(long *now)
+// {
+// 	struct timeval	tv;
 
-	if(gettimeofday(&tv, NULL))
-		return(RETURN_FAILURE);
-	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
-	return (RETURN_SUCCESS);
-}
+// 	if(gettimeofday(&tv, NULL))
+// 		return(RETURN_FAILURE);
+// 	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
+// 	return (RETURN_SUCCESS);
+// }
 
 static int philo_died_detected(t_philo *tmp)
 {

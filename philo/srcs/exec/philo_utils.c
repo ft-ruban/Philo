@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/22 10:45:30 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/29 14:14:58 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,124 +14,69 @@
 //#include <sys/time.h> //getting time of day need it
 //#include <unistd.h>   //usleep
 
-// long    get_time_in_us(void)
-// {
-//     struct timeval tv;
-//     gettimeofday(&tv, NULL);
-//     return (tv.tv_sec * 1000000L + tv.tv_usec);
-// }
-
-// void    ft_usleep(long usec, t_settings *set)
-// {
-//     long start;
-//     long now;
-
-//     start = get_time_in_us();
-// 	pthread_mutex_lock(&set->print_mutex);
-//     while (!set->death)
-//     {
-// 		pthread_mutex_unlock(&set->print_mutex);
-//         now = get_time_in_us();
-//         if (now - start >= usec)
-// 		{
-// 			pthread_mutex_lock(&set->print_mutex);
-// 			break;
-// 		}
-//         usleep(100);
-// 		pthread_mutex_lock(&set->print_mutex);
-//     }
-// 	pthread_mutex_unlock(&set->print_mutex);
-// }
-
-//handle everything related to the forks availability
-//waiting for it to be available and setup the bool
-
-void	routine_take_fork(t_philo *philo, bool right)
+long    get_time_in_us(void)
 {
-	if (right)
-	{
-		pthread_mutex_lock(&philo->right->mutex);
-		while(!philo->right->available)
-		{
-			pthread_mutex_unlock(&philo->right->mutex);
-			usleep(10);
-			pthread_mutex_lock(&philo->right->mutex);
-		}
-		philo->right->available = false;
-		pthread_mutex_unlock(&philo->right->mutex);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->left->mutex);
-		while(!philo->left->available)
-		{
-			pthread_mutex_unlock(&philo->left->mutex);
-			usleep(10);
-			pthread_mutex_lock(&philo->left->mutex);
-		}
-		philo->left->available = false;
-		pthread_mutex_unlock(&philo->left->mutex);
-	}
-	print_msg_routine(philo, IS_TAKING_FORK);
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000000L + tv.tv_usec);
 }
 
-//to fill now variable that would be used for timestamp
+void    ft_usleep(long usec, t_settings *set)
+{
+    long start;
+    long now;
 
-static time_t	fill_now_print(t_settings *set)
+    start = get_time_in_us();
+	pthread_mutex_lock(&set->print_mutex);
+    while (!set->death)
+    {
+		pthread_mutex_unlock(&set->print_mutex);
+        now = get_time_in_us();
+        if (now - start >= usec)
+		{
+			pthread_mutex_lock(&set->print_mutex);
+			break;
+		}
+        usleep(100);
+		pthread_mutex_lock(&set->print_mutex);
+    }
+	pthread_mutex_unlock(&set->print_mutex);
+}
+
+
+//fill the now variable that would be used to 
+//give right timer of our philo
+
+long	fill_now_variable(long *now)
 {
 	struct timeval	tv;
 
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec - set->subusec));
+	if(gettimeofday(&tv, NULL))
+		return(RETURN_FAILURE);
+	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (RETURN_SUCCESS);
 }
 
-//reset time_alive and add a + 1 to meal count
+//here in that function our thread wait until all threads are
+//created once they get we setup their timer
 
-static void	update_eat(t_philo *philo)
+int wait_all_threads(t_settings *set, t_philo *philo)
 {
-	struct timeval	tv;
-	time_t now;
+	long now;
 
-	philo->meals_eaten = philo->meals_eaten + 1;
-	gettimeofday(&tv, NULL);
-	now = tv.tv_sec * 1000000 + tv.tv_usec;
+	now = 0;
+	pthread_mutex_lock(&set->print_mutex);
+	while(!set->start)
+	{
+		pthread_mutex_unlock(&set->print_mutex);
+		usleep(1);
+		pthread_mutex_lock(&set->print_mutex);
+	}
+	pthread_mutex_unlock(&set->print_mutex);
+	if(fill_now_variable(&now))
+		return(RETURN_FAILURE);
 	pthread_mutex_lock(&philo->t_alive_mutex);
-	philo->t_alive = now; /*tv.tv_sec * 1000000 + tv.tv_usec;*/
+	philo->t_alive = now;
 	pthread_mutex_unlock(&philo->t_alive_mutex);
-	return ;
-}
-
-//here this handle all the printing msg
-//related to the project, as eat sleep
-//forks think... it also reset the time
-//alice of philos right bfr printing the eating
-//msg
-
-void	print_msg_routine(t_philo *philo, size_t cases)
-{
-	time_t	now;
-
-	pthread_mutex_lock(&philo->set->print_mutex);
-	if (cases == IS_EATING && philo->set->death != true)
-	{
-		update_eat(philo);
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is eating\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_THINKING && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is thinking\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_TAKING_FORK && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld has taken a fork\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_SLEEPING && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is sleeping\n", now / 1000, philo->id);
-	}
-	pthread_mutex_unlock(&philo->set->print_mutex);
+	return(RETURN_SUCCESS);
 }

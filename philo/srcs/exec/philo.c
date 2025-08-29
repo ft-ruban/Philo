@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/22 10:41:54 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/29 14:02:53 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,15 +86,15 @@ static int	creating_philo_thread(t_philo *philo, bool even, size_t *count)
 {
 	while (philo)
 	{
-		if (even)
+		if (even) //changer debile
 		{
-			if (pthread_create(&philo->thread_id, NULL, &routine_even, philo))
+			if (pthread_create(&philo->thread_id, NULL, &routine_odd, philo))
 				return (RETURN_FAILURE);
 			even = false;
 		}
 		else
 		{
-			if (pthread_create(&philo->thread_id, NULL, &routine_odd, philo))
+			if (pthread_create(&philo->thread_id, NULL, &routine_even, philo))
 				return (RETURN_FAILURE);
 			even = true;
 		}

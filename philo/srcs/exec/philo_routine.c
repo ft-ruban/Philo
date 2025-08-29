@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/22 10:58:43 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/29 12:54:35 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,167 +14,98 @@
 #include "exec.h"
 //#include <unistd.h> //usleep
 
-//here odd philo take their left forks then right
-//also quick checker in case we just have a single philo
-//bcs in that case forks id left and right is the same
-//eat, and make there forks available once more.
 
-static void	fork_eat_even(t_philo *philo
-		,bool *break_loop)
-{
-	routine_take_fork(philo, false);
-	if (philo->right->id == philo->left->id)
-	{
-		*break_loop = true;
-		return ;
-	}
-	routine_take_fork(philo, true);
-	print_msg_routine(philo, IS_EATING);
-	usleep(philo->set->t_eat);
-	//ft_usleep(philo->set->t_eat,philo->set);
-	pthread_mutex_lock(&philo->left->mutex);
-	philo->left->available = true;
-	pthread_mutex_unlock(&philo->left->mutex);
-	pthread_mutex_lock(&philo->right->mutex);	
-	philo->right->available = true;
-	pthread_mutex_unlock(&philo->right->mutex);
-}
+//to fill now variable that would be used for timestamp
 
-//here odd philo take their right forks then left
-//eat, and make there forks available once more
-
-static void	fork_eat_odd(t_philo *philo)
-{
-	routine_take_fork(philo, true);
-	routine_take_fork(philo, false);
-	print_msg_routine(philo, IS_EATING);
-	usleep(philo->set->t_eat);
-	//ft_usleep(philo->set->t_eat,philo->set);
-	pthread_mutex_lock(&philo->right->mutex);
-	philo->right->available = true;
-	pthread_mutex_unlock(&philo->right->mutex);
-	pthread_mutex_lock(&philo->left->mutex);
-	philo->left->available = true;
-	pthread_mutex_unlock(&philo->left->mutex);
-}
-
-//fill the now variable that would be used to 
-//give right timer of our philo
-
-static long	fill_now_variable(long *now)
+static time_t	fill_now_print(t_settings *set)
 {
 	struct timeval	tv;
 
-	if(gettimeofday(&tv, NULL))
-		return(RETURN_FAILURE);
-	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
-	return (RETURN_SUCCESS);
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec - set->subusec));
 }
 
-//here in that function our thread wait until all threads are
-//created once they get we setup their timer
+//handle everything related to the forks availability
+//waiting for it to be available and setup the bool
 
-static int wait_all_threads(t_settings *set, t_philo *philo)
+void	routine_take_fork(t_philo *philo, bool right)
 {
-	long now;
-
-	now = 0;
-	pthread_mutex_lock(&set->print_mutex);
-	while(!set->start)
+	if (right)
 	{
-		pthread_mutex_unlock(&set->print_mutex);
-		usleep(1);
-		pthread_mutex_lock(&set->print_mutex);
+		pthread_mutex_lock(&philo->right->mutex);
+		while(!philo->right->available)
+		{
+			pthread_mutex_unlock(&philo->right->mutex);
+			usleep(10);
+			pthread_mutex_lock(&philo->right->mutex);
+		}
+		philo->right->available = false;
+		pthread_mutex_unlock(&philo->right->mutex);
 	}
-	pthread_mutex_unlock(&set->print_mutex);
-	if(fill_now_variable(&now))
-		return(RETURN_FAILURE);
+	else
+	{
+		pthread_mutex_lock(&philo->left->mutex);
+		while(!philo->left->available)
+		{
+			pthread_mutex_unlock(&philo->left->mutex);
+			usleep(10);
+			pthread_mutex_lock(&philo->left->mutex);
+		}
+		philo->left->available = false;
+		pthread_mutex_unlock(&philo->left->mutex);
+	}
+	print_msg_routine(philo, IS_TAKING_FORK);
+}
+
+//reset time_alive and add a + 1 to meal count
+
+static void	update_eat(t_philo *philo)
+{
+	struct timeval	tv;
+	time_t now;
+
+	philo->meals_eaten = philo->meals_eaten + 1;
+	gettimeofday(&tv, NULL);
+	now = tv.tv_sec * 1000000 + tv.tv_usec;
 	pthread_mutex_lock(&philo->t_alive_mutex);
-	philo->t_alive = now;
+	philo->t_alive = now; /*tv.tv_sec * 1000000 + tv.tv_usec;*/
 	pthread_mutex_unlock(&philo->t_alive_mutex);
-	return(RETURN_SUCCESS);
+	return ;
 }
 
-//this is where our odd philo's threads would start.
-//at first they wait in wait all thread until all threads
-//are created. then it start to think, a usleep of t_eat / 2
-//is required WHEN the total nbr of philo is odd
-//for opti purpose in such case
-//then we get into our while loop that represent the general routine
-//of our even_nbr philo's threads
+//here this handle all the printing msg
+//related to the project, as eat sleep
+//forks think... it also reset the time
+//alice of philos right bfr printing the eating
+//msg
 
-void	*routine_odd(void *arg)
+void	print_msg_routine(t_philo *philo, size_t cases)
 {
-	t_philo	*philo;
-	//bool	first_iteration;
+	time_t	now;
 
-	philo = (t_philo *)arg;
-	wait_all_threads(philo->set, philo);
-	print_msg_routine(philo, IS_THINKING);
-	if(philo->set->nbr_philo_odd)
-		usleep(philo->set->t_eat / 2);
-	//first_iteration = true;
-	pthread_mutex_lock(&philo->set->death_mutex);
-	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
+	pthread_mutex_lock(&philo->set->print_mutex);
+	if (cases == IS_EATING && philo->set->death != true)
 	{
-		pthread_mutex_unlock(&philo->set->death_mutex);
-		fork_eat_odd(philo/*, first_iteration*/);
-		print_msg_routine(philo, IS_SLEEPING);
-		usleep(philo->set->t_sleep);
-		//ft_usleep(philo->set->t_sleep,philo->set);
-		print_msg_routine(philo, IS_THINKING);
-		if(!philo->set->nbr_philo_odd)
-			usleep(philo->set->t_eat);
-		// else
-		// 	usleep(100);
-		//first_iteration = false;
-		pthread_mutex_lock(&philo->set->death_mutex);
+		update_eat(philo);
+		now = fill_now_print(philo->set);
+		printf("%ld %ld is eating\n", now / 1000, philo->id);
 	}
-	pthread_mutex_unlock(&philo->set->death_mutex);
-	pthread_mutex_lock(&philo->set->pasta_mutex);
-	if (philo->meals_eaten == philo->set->max_meal)
-		philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
-	pthread_mutex_unlock(&philo->set->pasta_mutex);
-	return (0);
+	else if (cases == IS_THINKING && philo->set->death != true)
+	{
+		now = fill_now_print(philo->set);
+		printf("%ld %ld is thinking\n", now / 1000, philo->id);
+	}
+	else if (cases == IS_TAKING_FORK && philo->set->death != true)
+	{
+		now = fill_now_print(philo->set);
+		printf("%ld %ld has taken a fork\n", now / 1000, philo->id);
+	}
+	else if (cases == IS_SLEEPING && philo->set->death != true)
+	{
+		now = fill_now_print(philo->set);
+		printf("%ld %ld is sleeping\n", now / 1000, philo->id);
+	}
+	pthread_mutex_unlock(&philo->set->print_mutex);
 }
 
-//this is where our even philo's threads would start.
-//at first they wait in wait all thread until all threads
-//are created. then it start to think, a usleep of t_eat / 6
-//is required for the start of the routine for opti purpose
-//then we get into our while loop that represent the general routine
-//of our even_nbr philo's threads
 
-void	*routine_even(void *arg)
-{
-	t_philo	*philo;
-	bool	break_loop;
-
-	philo = (t_philo *)arg;
-	wait_all_threads(philo->set, philo);
-	print_msg_routine(philo, IS_THINKING);
-	usleep(philo->set->t_eat / 6);
-	break_loop = false;
-	pthread_mutex_lock(&philo->set->death_mutex);
-	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
-	{
-		pthread_mutex_unlock(&philo->set->death_mutex);
-		fork_eat_even(philo, &break_loop);
-		if (break_loop)
-			break ;
-		print_msg_routine(philo, IS_SLEEPING);
-		usleep(philo->set->t_sleep);
-		//ft_usleep(philo->set->t_sleep,philo->set);
-		print_msg_routine(philo, IS_THINKING);
-		if (!philo->set->nbr_philo_odd)
-			usleep(philo->set->t_eat);
-		pthread_mutex_lock(&philo->set->death_mutex);
-	}
-	if(!break_loop)
-		pthread_mutex_unlock(&philo->set->death_mutex);
-	pthread_mutex_lock(&philo->set->pasta_mutex);
-	if (philo->meals_eaten == philo->set->max_meal)
-		philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
-	pthread_mutex_unlock(&philo->set->pasta_mutex);
-	return (0);
-}
