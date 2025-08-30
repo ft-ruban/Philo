@@ -6,12 +6,11 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:34:54 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 09:41:06 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:31:48 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parsing.h"
-//#include <stdlib.h>
 #include <unistd.h>
 
 //write in fd 2 the right error msg
@@ -26,7 +25,7 @@ static void	msg_sleep_maxmeal_sleep_plus_eat(int return_value)
 	else if (return_value == INVALID_MAXMEAL)
 	{
 		write(2, "philo: INVALID_MAXMEAL: invalid input enter ", 45);
-		write(2, "a value between 0 and 9223372036854775\n", 40);
+		write(2, "a value between 0 and 99999999999999999\n", 41);
 	}
 	else if (return_value == INVALID_SLEEP_PLUS_EAT)
 	{
