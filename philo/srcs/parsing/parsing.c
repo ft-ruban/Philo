@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:50:22 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 07:53:17 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 12:41:37 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,13 @@ int	parsing(int argc, char *argv[], t_settings *set)
 	else
 		set->nbr_philo_odd = false;
 	set->start = false;
+	if(set->t_die > set->t_eat + set->t_sleep)
+		set->edge_case = false;
+	else 
+		set->edge_case = true;
+	// printf("edge = %d\n", set->edge_case);
+	// printf("tdie = %ld\n", set->t_die);
+	// printf("eat = %ld\n", set->t_eat);
+	// printf("sleep = %ld\n", set->t_sleep);
 	return (RETURN_SUCCESS);
 }

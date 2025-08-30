@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_routine_even.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/30 14:33:57 by ldevoude          #+#    #+#             */
+/*   Updated: 2025/08/30 14:33:57 by ldevoude         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "exec.h"
 
@@ -81,7 +93,7 @@ void	*routine_even(void *arg)
 
 	philo = (t_philo *)arg;
 	wait_all_threads(philo->set, philo);
-	if (philo->set->t_eat + philo->set->t_sleep > philo->set->t_die)
+	if (philo->set->edge_case)
 		fragmented_usleep_even(philo);
 	else
 		routine_even_loop(philo);

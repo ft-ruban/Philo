@@ -27,6 +27,8 @@ static int	fork_eat_odd(t_philo *philo)
 
 static int routine_odd_loop(t_philo *philo)
 {
+	print_msg_routine(philo, IS_THINKING);
+	usleep(philo->set->t_eat / 6);
     pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
@@ -53,23 +55,22 @@ static int routine_odd_loop(t_philo *philo)
 
 static void fragmented_usleep_odd(t_philo *philo)
 {
-	print_msg_routine(philo, IS_THINKING);
-	if(philo->set->nbr_philo_odd)
-		ft_usleep(philo->set->t_eat / 2, philo->set);
+	// print_msg_routine(philo, IS_THINKING);
+	// usleep(philo->set->t_eat / 6);
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
 		pthread_mutex_unlock(&philo->set->death_mutex);
-		routine_take_fork(philo, true);
 		routine_take_fork(philo, false);
+		routine_take_fork(philo, true);
 		print_msg_routine(philo, IS_EATING);
 		ft_usleep(philo->set->t_eat, philo->set);
-		pthread_mutex_lock(&philo->right->mutex);
-		philo->right->available = true;
-		pthread_mutex_unlock(&philo->right->mutex);
 		pthread_mutex_lock(&philo->left->mutex);
 		philo->left->available = true;
 		pthread_mutex_unlock(&philo->left->mutex);
+		pthread_mutex_lock(&philo->right->mutex);
+		philo->right->available = true;
+		pthread_mutex_unlock(&philo->right->mutex);
 		print_msg_routine(philo, IS_SLEEPING);
 		ft_usleep(philo->set->t_sleep, philo->set);
 		print_msg_routine(philo, IS_THINKING);
@@ -86,18 +87,13 @@ void	*routine_odd(void *arg)
 
 	philo = (t_philo *)arg;
 	wait_all_threads(philo->set, philo);
-	print_msg_routine(philo, IS_THINKING);
-	usleep(philo->set->t_eat / 6);
-	if (philo->set->t_eat + philo->set->t_sleep > philo->set->t_die)
+	if (philo->set->edge_case)
 	{
-		fragmented_usleep_odd(philo)
-		{
-			usleep(philo->set->t_die);
-			return(0);
-		}
+		print_msg_routine(philo, IS_THINKING);
+		ft_usleep(philo->set->t_eat / 6, philo->set);
+		fragmented_usleep_odd(philo);
 	}
-
-	if(routine_odd_loop(philo))
+	else if(routine_odd_loop(philo))
     {
         usleep(philo->set->t_die);
         return(0);

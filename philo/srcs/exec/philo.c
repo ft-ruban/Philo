@@ -6,17 +6,15 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/29 14:02:53 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 14:32:12 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-//#include <sys/time.h> //gettingtimeofdayneedit
-//#include <unistd.h>   //usleep
 
-//in case of error we need to make our philo leave
-//by setting up the right bools then by waiting all of our philo
-//to leave until the count i = to count
+// in case of error we need to make our philo leave
+// by setting up the right bools then by waiting all of our philo
+// to leave until the count i = to count
 
 static int	cleanup_threads_on_error(t_philo *philo, size_t count)
 {
@@ -37,8 +35,8 @@ static int	cleanup_threads_on_error(t_philo *philo, size_t count)
 	return (RETURN_FAILURE);
 }
 
-//wait for our monitor to finish its job, then we wait for all
-//philo to leave one by one until all of them are terminated
+// wait for our monitor to finish its job, then we wait for all
+// philo to leave one by one until all of them are terminated
 
 static int	wait_all_thread(t_philo *philo)
 {
@@ -53,10 +51,10 @@ static int	wait_all_thread(t_philo *philo)
 	return (RETURN_SUCCESS);
 }
 
-//start out timestamp and tell our philo that
-//they can start their own routine once
-//mutex print is unlocked they all now can leave
-//their waiting loop
+// start out timestamp and tell our philo that
+// they can start their own routine once
+// mutex print is unlocked they all now can leave
+// their waiting loop
 
 static int	begin_timestamp(t_settings *set)
 {
@@ -76,17 +74,17 @@ static int	begin_timestamp(t_settings *set)
 	return (RETURN_SUCCESS);
 }
 
-//create our philo and direct them at the right place
-//depending of if they are an even or true ID number
-//because the logic depend of their emplacement later
-//in the routines count is used for cleanup to clean
-//the right amount of thread
+// create our philo and direct them at the right place
+// depending of if they are an even or true ID number
+// because the logic depend of their emplacement later
+// in the routines count is used for cleanup to clean
+// the right amount of thread
 
 static int	creating_philo_thread(t_philo *philo, bool even, size_t *count)
 {
 	while (philo)
 	{
-		if (even) //changer debile
+		if (even) // changer debile
 		{
 			if (pthread_create(&philo->thread_id, NULL, &routine_odd, philo))
 				return (RETURN_FAILURE);
@@ -104,16 +102,14 @@ static int	creating_philo_thread(t_philo *philo, bool even, size_t *count)
 	return (RETURN_SUCCESS);
 }
 
-
-
-//here we get the threads creation ready first we create
-//a thread for each philo (if at any point there is a error
-//we use cleanup_thread_on_error to leave properly)
-//then we start our timestamp and set our start bool at true
-//to tell our waiting philos that they can start their routine
-//to make sure everything get started when all philos are created
-//then we create our monitor and finaly we wait for all of them
-//to finish their things
+// here we get the threads creation ready first we create
+// a thread for each philo (if at any point there is a error
+// we use cleanup_thread_on_error to leave properly)
+// then we start our timestamp and set our start bool at true
+// to tell our waiting philos that they can start their routine
+// to make sure everything get started when all philos are created
+// then we create our monitor and finaly we wait for all of them
+// to finish their things
 
 int	prepare_creation_thread(t_philo *philo, t_philo *tmp, bool even)
 {

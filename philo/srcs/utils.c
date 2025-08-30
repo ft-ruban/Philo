@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:23:13 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 09:52:56 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 14:42:37 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,14 @@ int	destroy_mutex_success(t_settings *settings, t_philo *philo, t_forks *forks,
 int free_write_then_exit_program(int error_type, t_settings *set, t_philo *philo, t_forks *forks)
 {
 	if (error_type == MALLOC_SET_ERROR)
-		write(2, "main:36 : Malloc error for essential structure\n", 24);
+		write(2, "main:30 : Malloc error for essential structure\n", 48);
 	else if (error_type == PARSING_ERROR)
 	{
 		free(set);
 		return(2);
 	}
 	else if (error_type == MALLOC_PHILO_OR_FORK_ERROR)
-		write(2, "main:45 : Malloc error for essential structures\n",49);
+		write(2, "main:36 : Malloc error for essential structures\n",49);
 	else if (error_type == SETUP_STRUCT_ERROR)
 		write(2, "main:50 : error during init of mutex\n", 38);
 	else if (error_type == EXEC_ERROR)
