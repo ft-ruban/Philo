@@ -6,18 +6,15 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 15:00:47 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 14:48:01 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 16:00:45 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "parsing.h"
 
-// TODO dans setup peut etre faire du long un size_t 
-//(et donc aussi nbr philo) c plus propre
-
 // at first we malloc our set struct then check the arguments entered
-// in our parsing we also fill our set struct in the parsing -
+// in our parsing we also fill our set struct in the parsing
 // once parsing successful we setup philo struct and forks struct
 // once done we can start our simulation once done we destroy
 // mutex, free our struct to exit properly

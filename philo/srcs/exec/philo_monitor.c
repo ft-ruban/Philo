@@ -6,26 +6,13 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:24:01 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 11:54:03 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:59:10 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-//#include <sys/time.h>
-//#include <unistd.h> //usleep
 
-//duplicata dans philo_routine
-// static long	fill_now_variable(long *now)
-// {
-// 	struct timeval	tv;
-
-// 	if(gettimeofday(&tv, NULL))
-// 		return(RETURN_FAILURE);
-// 	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
-// 	return (RETURN_SUCCESS);
-// }
-
-static int philo_died_detected(t_philo *tmp)
+static int	philo_died_detected(t_philo *tmp)
 {
 	struct timeval	tv;
 
@@ -33,8 +20,8 @@ static int philo_died_detected(t_philo *tmp)
 	if (!tmp->set->death)
 	{
 		gettimeofday(&tv, NULL);
-		tmp->set->time_passed = (tv.tv_sec - tmp->set->subunit)
-			* 1000000 + (tv.tv_usec - tmp->set->subusec);
+		tmp->set->time_passed = (tv.tv_sec - tmp->set->subunit) * 1000000
+			+ (tv.tv_usec - tmp->set->subusec);
 		pthread_mutex_lock(&tmp->set->death_mutex);
 		tmp->set->death = true;
 		pthread_mutex_unlock(&tmp->set->death_mutex);
@@ -54,7 +41,7 @@ static int	philo_monitor_loop_threads(t_philo *tmp, long now)
 			&& tmp->meals_eaten != tmp->set->max_meal)
 		{
 			pthread_mutex_unlock(&tmp->t_alive_mutex);
-			return(philo_died_detected(tmp));
+			return (philo_died_detected(tmp));
 		}
 		pthread_mutex_unlock(&tmp->t_alive_mutex);
 		tmp = tmp->next;
@@ -62,15 +49,15 @@ static int	philo_monitor_loop_threads(t_philo *tmp, long now)
 	return (RETURN_SUCCESS);
 }
 
-//here is the monitor that is used to check
-//whenever a philo is dead to make everything stop as asked
-//it only leave it's loop if all philo ate the right amount of food
-//or if a philo died.
+// here is the monitor that is used to check
+// whenever a philo is dead to make everything stop as asked
+// it only leave it's loop if all philo ate the right amount of food
+// or if a philo died.
 
 void	*philo_monitor(void *arg)
 {
-	t_philo			*start;
-	long			now;
+	t_philo	*start;
+	long	now;
 
 	now = 0;
 	start = arg;

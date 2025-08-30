@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:38 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 09:41:13 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 16:00:33 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,5 @@ int		parsing(int argc, char *argv[], t_settings *set);
 long	ft_atol(const char *nptr);
 size_t	ft_strlen(const char *s);
 int		ft_isnum(int c);
-
 
 #endif

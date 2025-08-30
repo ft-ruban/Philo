@@ -6,16 +6,16 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/29 12:54:35 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:51:35 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 //#include <sys/time.h> //gettingtimeofday
 #include "exec.h"
+
 //#include <unistd.h> //usleep
 
-
-//to fill now variable that would be used for timestamp
+// to fill now variable that would be used for timestamp
 
 static time_t	fill_now_print(t_settings *set)
 {
@@ -25,15 +25,15 @@ static time_t	fill_now_print(t_settings *set)
 	return ((tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec - set->subusec));
 }
 
-//handle everything related to the forks availability
-//waiting for it to be available and setup the bool
+// handle everything related to the forks availability
+// waiting for it to be available and setup the bool
 
 void	routine_take_fork(t_philo *philo, bool right)
 {
 	if (right)
 	{
 		pthread_mutex_lock(&philo->right->mutex);
-		while(!philo->right->available)
+		while (!philo->right->available)
 		{
 			pthread_mutex_unlock(&philo->right->mutex);
 			usleep(10);
@@ -45,7 +45,7 @@ void	routine_take_fork(t_philo *philo, bool right)
 	else
 	{
 		pthread_mutex_lock(&philo->left->mutex);
-		while(!philo->left->available)
+		while (!philo->left->available)
 		{
 			pthread_mutex_unlock(&philo->left->mutex);
 			usleep(10);
@@ -57,27 +57,27 @@ void	routine_take_fork(t_philo *philo, bool right)
 	print_msg_routine(philo, IS_TAKING_FORK);
 }
 
-//reset time_alive and add a + 1 to meal count
+// reset time_alive and add a + 1 to meal count
 
 static void	update_eat(t_philo *philo)
 {
 	struct timeval	tv;
-	time_t now;
+	time_t			now;
 
 	philo->meals_eaten = philo->meals_eaten + 1;
 	gettimeofday(&tv, NULL);
 	now = tv.tv_sec * 1000000 + tv.tv_usec;
 	pthread_mutex_lock(&philo->t_alive_mutex);
-	philo->t_alive = now; /*tv.tv_sec * 1000000 + tv.tv_usec;*/
+	philo->t_alive = now;
 	pthread_mutex_unlock(&philo->t_alive_mutex);
 	return ;
 }
 
-//here this handle all the printing msg
-//related to the project, as eat sleep
-//forks think... it also reset the time
-//alice of philos right bfr printing the eating
-//msg
+// here this handle all the printing msg
+// related to the project, as eat sleep
+// forks think... it also reset the time
+// alice of philos right bfr printing the eating
+// msg
 
 void	print_msg_routine(t_philo *philo, size_t cases)
 {
@@ -107,5 +107,3 @@ void	print_msg_routine(t_philo *philo, size_t cases)
 	}
 	pthread_mutex_unlock(&philo->set->print_mutex);
 }
-
-

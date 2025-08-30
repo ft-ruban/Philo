@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:28 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/29 12:55:39 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 16:00:16 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 # define EXEC_H
 
 # include "philo.h"
-#include <sys/time.h>
-#include <unistd.h>
+# include <sys/time.h>
+# include <unistd.h>
 
-
-#define THINK_DELAY 150
+# define THINK_DELAY 150
+# define SOLO_PHILO 1
 
 typedef enum e_msg_to_print
 {
@@ -38,7 +38,7 @@ void	*routine_odd(void *arg);
 void	*routine_even(void *arg);
 
 // philo_routine
-int wait_all_threads(t_settings *set, t_philo *philo);
+int		wait_all_threads(t_settings *set, t_philo *philo);
 long	fill_now_variable(long *now);
 
 // philo_utils.c
@@ -51,6 +51,6 @@ void	ft_usleep(long usec, t_settings *set);
 // philo.c
 void	*routine_odd(void *arg);
 void	*routine_even(void *arg);
-int		prepare_creation_thread(t_philo *philo, t_philo *tmp, bool even);
+int		prepare_creation_thread(t_philo *philo, t_philo *tmp, bool odd);
 
 #endif

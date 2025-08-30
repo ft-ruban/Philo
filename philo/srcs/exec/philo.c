@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:08:41 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 14:32:12 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:50:24 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,21 +80,21 @@ static int	begin_timestamp(t_settings *set)
 // in the routines count is used for cleanup to clean
 // the right amount of thread
 
-static int	creating_philo_thread(t_philo *philo, bool even, size_t *count)
+static int	creating_philo_thread(t_philo *philo, bool odd, size_t *count)
 {
 	while (philo)
 	{
-		if (even) // changer debile
+		if (odd)
 		{
 			if (pthread_create(&philo->thread_id, NULL, &routine_odd, philo))
 				return (RETURN_FAILURE);
-			even = false;
+			odd = false;
 		}
 		else
 		{
 			if (pthread_create(&philo->thread_id, NULL, &routine_even, philo))
 				return (RETURN_FAILURE);
-			even = true;
+			odd = true;
 		}
 		*count = *count + 1;
 		philo = philo->next;
@@ -111,12 +111,12 @@ static int	creating_philo_thread(t_philo *philo, bool even, size_t *count)
 // then we create our monitor and finaly we wait for all of them
 // to finish their things
 
-int	prepare_creation_thread(t_philo *philo, t_philo *tmp, bool even)
+int	prepare_creation_thread(t_philo *philo, t_philo *tmp, bool odd)
 {
 	size_t	count;
 
 	count = 0;
-	if (creating_philo_thread(philo, even, &count))
+	if (creating_philo_thread(philo, odd, &count))
 		return (cleanup_threads_on_error(philo, count));
 	if (begin_timestamp(philo->set))
 		return (cleanup_threads_on_error(philo, count));

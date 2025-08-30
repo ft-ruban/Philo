@@ -6,17 +6,19 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:33:57 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 14:33:57 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:58:54 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "exec.h"
 
-static void fragmented_usleep_even(t_philo *philo)
+// special routine in case of edge case that use a custom usleep
+// instead of the normal one
+
+static void	fragmented_usleep_even(t_philo *philo)
 {
 	print_msg_routine(philo, IS_THINKING);
-	if(philo->set->nbr_philo_odd)
+	if (philo->set->nbr_philo_odd)
 		ft_usleep(philo->set->t_eat / 2, philo->set);
 	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
@@ -35,15 +37,15 @@ static void fragmented_usleep_even(t_philo *philo)
 		print_msg_routine(philo, IS_SLEEPING);
 		ft_usleep(philo->set->t_sleep, philo->set);
 		print_msg_routine(philo, IS_THINKING);
-		if(!philo->set->nbr_philo_odd)
+		if (!philo->set->nbr_philo_odd)
 			ft_usleep(philo->set->t_eat, philo->set);
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
 	pthread_mutex_unlock(&philo->set->death_mutex);
 }
 
-//here even philo take their right forks then left
-//eat, and make there forks available once more
+// here even philo take their right forks then left
+// eat, and make there forks available once more
 
 static void	fork_eat_even(t_philo *philo)
 {
@@ -59,33 +61,25 @@ static void	fork_eat_even(t_philo *philo)
 	pthread_mutex_unlock(&philo->left->mutex);
 }
 
-static void    routine_even_loop(t_philo *philo)
+static void	routine_even_loop(t_philo *philo)
 {
 	print_msg_routine(philo, IS_THINKING);
-	if(philo->set->nbr_philo_odd)
+	if (philo->set->nbr_philo_odd)
 		usleep(philo->set->t_eat / 2);
-    pthread_mutex_lock(&philo->set->death_mutex);
+	pthread_mutex_lock(&philo->set->death_mutex);
 	while (!philo->set->death && philo->meals_eaten != philo->set->max_meal)
 	{
 		pthread_mutex_unlock(&philo->set->death_mutex);
-		fork_eat_even(philo/*, first_iteration*/);
+		fork_eat_even(philo);
 		print_msg_routine(philo, IS_SLEEPING);
 		usleep(philo->set->t_sleep);
 		print_msg_routine(philo, IS_THINKING);
-		if(!philo->set->nbr_philo_odd)
+		if (!philo->set->nbr_philo_odd)
 			usleep(philo->set->t_eat);
 		pthread_mutex_lock(&philo->set->death_mutex);
 	}
 	pthread_mutex_unlock(&philo->set->death_mutex);
 }
-
-//this is where our even philo's threads would start.
-//at first they wait in wait all thread until all threads
-//are created. then it start to think, a usleep of t_eat / 2
-//is required WHEN the total nbr of philo is even
-//for opti purpose in such case
-//then we get into our while loop that represent the general routine
-//of our even_nbr philo's threads
 
 void	*routine_even(void *arg)
 {
@@ -101,5 +95,5 @@ void	*routine_even(void *arg)
 	if (philo->meals_eaten == philo->set->max_meal)
 		philo->set->philo_full_pasta = philo->set->philo_full_pasta + 1;
 	pthread_mutex_unlock(&philo->set->pasta_mutex);
-	return (0);
+	return (EXIT_SUCCESS);
 }
