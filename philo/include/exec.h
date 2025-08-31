@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:17:28 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/20 10:38:53 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:29:28 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 # define EXEC_H
 
 # include "philo.h"
+# include <sys/time.h>
+# include <unistd.h>
 
-#define THINK_DELAY 150
+# define THINK_DELAY 150
+# define SOLO_PHILO 1
 
 typedef enum e_msg_to_print
 {
@@ -28,19 +31,25 @@ typedef enum e_msg_to_print
 // philo_monitor.c
 void	*philo_monitor(void *arg);
 
-// philo_routine.c
+// philo_routine_odd.c
 void	*routine_odd(void *arg);
+
+// philo_routine_even.c
 void	*routine_even(void *arg);
 
-// philo_utils.c
+// philo_routine.c
 void	print_msg_routine(t_philo *philo, size_t cases);
 void	routine_take_fork(t_philo *philo, bool right);
+
+// philo_utils.c
+int		wait_all_threads(t_settings *set, t_philo *philo);
+long	fill_now_variable(long *now);
 void	ft_usleep(long usec, t_settings *set);
+
 // void routine_sleep(t_philo *philo, bool *first_iteration);
 
 // philo.c
-void	*routine_odd(void *arg);
-void	*routine_even(void *arg);
-int	philosopher(t_settings *set, t_philo *philo);
+
+int		prepare_creation_thread(t_philo *philo, t_philo *tmp, bool odd);
 
 #endif

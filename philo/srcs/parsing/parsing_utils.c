@@ -6,14 +6,14 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:51:31 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/09 10:53:01 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:28:35 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parsing.h"
 #include <limits.h>
 
-long	convert_ascii_to_long(int i, const char *nptr, int negative)
+static long	convert_ascii_to_long(int i, const char *nptr, int negative)
 {
 	long	result;
 
@@ -36,6 +36,8 @@ long	convert_ascii_to_long(int i, const char *nptr, int negative)
 		result *= -1;
 	return (result);
 }
+//convert given string of char into long type
+//doesnt handle overflow need to do it outside the function
 
 long	ft_atol(const char *nptr)
 {
@@ -55,6 +57,8 @@ long	ft_atol(const char *nptr)
 	return (convert_ascii_to_long(i, nptr, negative));
 }
 
+//return the total length of a given string of char
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	len;
@@ -63,4 +67,15 @@ size_t	ft_strlen(const char *s)
 	while (s[len] != '\0')
 		len++;
 	return (len);
+}
+
+//Check if the c number code in the ascii table
+//is a number between 0 and 9
+
+int	ft_isnum(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (RETURN_SUCCESS);
+	else
+		return (RETURN_ERROR);
 }

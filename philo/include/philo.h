@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:16:55 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 07:52:46 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/30 15:42:41 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 //#include <unistd.h>
+# include "stdlib.h"
 # include <pthread.h>
 # include <stdbool.h>
 
@@ -81,7 +82,8 @@ typedef struct s_settings
 	pthread_mutex_t		pasta_mutex;
 	pthread_mutex_t		death_mutex;
 	pthread_mutex_t		print_mutex;
-	bool 				start;
+	bool				edge_case;
+	bool				start;
 	bool				nbr_philo_odd;
 	bool				bool_pasta_mutex;
 	bool				bool_death_mutex;
@@ -89,13 +91,19 @@ typedef struct s_settings
 	bool				death;
 }						t_settings;
 
-// utils.c
+// setup_structs.c
 int						setup_philo_forks_struct(t_settings *settings,
 							t_philo *philo, t_forks *forks);
+
+// utils.c
 int						free_structs(t_settings *set, t_philo *philo,
 							t_forks *forks, int return_value);
-int 					destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i);
-int						destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
+int						destroy_mutex_nodes(t_philo *philo, t_forks *forks,
 							long i);
-
+int						destroy_mutex_fail(t_settings *settings, t_philo *philo,
+							t_forks *forks, long i);
+int						free_write_then_exit_program(int error_type,
+							t_settings *set, t_philo *philo, t_forks *forks);
+int						destroy_mutex_success(t_settings *settings,
+							t_philo *philo, t_forks *forks, long i);
 #endif

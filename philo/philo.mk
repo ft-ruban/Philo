@@ -8,6 +8,7 @@ SRC += $(addprefix $(MAINDIR), $(addsuffix .c, $(MAIN)))
 
 override MAIN := \
 	main \
+	setup_structs \
 	utils \
 
 SRC += $(addprefix $(PARSERDIR), $(addsuffix .c, $(PARSERSRC)))
@@ -22,6 +23,8 @@ SRC += $(addprefix $(EXECDIR), $(addsuffix .c, $(EXECSRC)))
 
 override EXECSRC := \
 	philo_monitor \
+	philo_routine_even \
+	philo_routine_odd \
 	philo_routine \
 	philo \
 	philo_utils

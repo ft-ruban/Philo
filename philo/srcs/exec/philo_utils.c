@@ -6,120 +6,75 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/21 10:49:09 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:25:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-#include <sys/time.h> //getting time of day need it
-#include <unistd.h>   //usleep
 
-long    get_time_in_us(void)
+static long	get_time_in_us(void)
 {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (tv.tv_sec * 1000000L + tv.tv_usec);
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000000L + tv.tv_usec);
 }
 
-void    ft_usleep(long usec, t_settings *set)
+void	ft_usleep(long usec, t_settings *set)
 {
-    long start;
-    long now;
+	long	start;
+	long	now;
 
-    start = get_time_in_us();
+	start = get_time_in_us();
 	pthread_mutex_lock(&set->print_mutex);
-    while (!set->death)
-    {
+	while (!set->death)
+	{
 		pthread_mutex_unlock(&set->print_mutex);
-        now = get_time_in_us();
-        if (now - start >= usec)
+		now = get_time_in_us();
+		if (now - start >= usec)
 		{
 			pthread_mutex_lock(&set->print_mutex);
-			break;
+			break ;
 		}
-        usleep(100);
+		usleep(100);
 		pthread_mutex_lock(&set->print_mutex);
-    }
+	}
 	pthread_mutex_unlock(&set->print_mutex);
 }
 
-void	routine_take_fork(t_philo *philo, bool right)
-{
-	if (right)
-	{
-		pthread_mutex_lock(&philo->right->mutex);
-		while(!philo->right->available)
-		{
-			pthread_mutex_unlock(&philo->right->mutex);
-			usleep(10);
-			pthread_mutex_lock(&philo->right->mutex);
-		}
-		philo->right->available = false;
-		pthread_mutex_unlock(&philo->right->mutex);
-		print_msg_routine(philo, IS_TAKING_FORK);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->left->mutex);
-		while(!philo->left->available)
-		{
-			pthread_mutex_unlock(&philo->left->mutex);
-			usleep(10);
-			pthread_mutex_lock(&philo->left->mutex);
-		}
-		philo->left->available = false;
-		pthread_mutex_unlock(&philo->left->mutex);
-		print_msg_routine(philo, IS_TAKING_FORK);
-	}
-}
+// fill the now variable that would be used to
+// give right timer of our philo
 
-static time_t	fill_now_print(t_settings *set)
+long	fill_now_variable(long *now)
 {
 	struct timeval	tv;
 
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec - set->subunit) * 1000000 + (tv.tv_usec - set->subusec));
+	if (gettimeofday(&tv, NULL))
+		return (RETURN_FAILURE);
+	*now = (tv.tv_sec * 1000000 + tv.tv_usec);
+	return (RETURN_SUCCESS);
 }
 
-static void	update_eat(t_philo *philo)
-{
-	struct timeval	tv;
-	time_t now;
+// here in that function our thread wait until all threads are
+// created once they get we setup their timer
 
-	philo->meals_eaten = philo->meals_eaten + 1;
-	gettimeofday(&tv, NULL);
-	now = tv.tv_sec * 1000000 + tv.tv_usec;
+int	wait_all_threads(t_settings *set, t_philo *philo)
+{
+	long	now;
+
+	now = 0;
+	pthread_mutex_lock(&set->print_mutex);
+	while (!set->start)
+	{
+		pthread_mutex_unlock(&set->print_mutex);
+		usleep(1);
+		pthread_mutex_lock(&set->print_mutex);
+	}
+	pthread_mutex_unlock(&set->print_mutex);
+	if (fill_now_variable(&now))
+		return (RETURN_FAILURE);
 	pthread_mutex_lock(&philo->t_alive_mutex);
-	philo->t_alive = now; /*tv.tv_sec * 1000000 + tv.tv_usec;*/
+	philo->t_alive = now;
 	pthread_mutex_unlock(&philo->t_alive_mutex);
-	return ;
-}
-
-void	print_msg_routine(t_philo *philo, size_t cases)
-{
-	time_t	now;
-
-	pthread_mutex_lock(&philo->set->print_mutex);
-	if (cases == IS_EATING && philo->set->death != true)
-	{
-		update_eat(philo);
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is eating\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_THINKING && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is thinking\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_TAKING_FORK && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld has taken a fork\n", now / 1000, philo->id);
-	}
-	else if (cases == IS_SLEEPING && philo->set->death != true)
-	{
-		now = fill_now_print(philo->set);
-		printf("%ld %ld is sleeping\n", now / 1000, philo->id);
-	}
-	pthread_mutex_unlock(&philo->set->print_mutex);
+	return (RETURN_SUCCESS);
 }
