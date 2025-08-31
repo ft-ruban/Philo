@@ -6,14 +6,14 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 10:51:31 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 15:32:02 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:28:35 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parsing.h"
 #include <limits.h>
 
-long	convert_ascii_to_long(int i, const char *nptr, int negative)
+static long	convert_ascii_to_long(int i, const char *nptr, int negative)
 {
 	long	result;
 

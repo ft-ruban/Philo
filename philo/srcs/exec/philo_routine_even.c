@@ -6,7 +6,7 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 14:33:57 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 15:58:54 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:22:28 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static void	fork_eat_even(t_philo *philo)
 	pthread_mutex_unlock(&philo->left->mutex);
 }
 
+// our routine happen here
+
 static void	routine_even_loop(t_philo *philo)
 {
 	print_msg_routine(philo, IS_THINKING);
@@ -80,6 +82,10 @@ static void	routine_even_loop(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->set->death_mutex);
 }
+// even philo would start here. we wait
+// the others to be created in wait_all_thread
+// then depending of if we are dealing with an edge case
+// or not it goes to a different routine.
 
 void	*routine_even(void *arg)
 {

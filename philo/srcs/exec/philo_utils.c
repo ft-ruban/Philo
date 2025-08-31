@@ -6,13 +6,13 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:16:23 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 14:32:33 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:25:17 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-long	get_time_in_us(void)
+static long	get_time_in_us(void)
 {
 	struct timeval	tv;
 

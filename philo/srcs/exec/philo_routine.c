@@ -6,18 +6,15 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 14:56:59 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 15:51:35 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 11:26:41 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <sys/time.h> //gettingtimeofday
 #include "exec.h"
-
-//#include <unistd.h> //usleep
 
 // to fill now variable that would be used for timestamp
 
-static time_t	fill_now_print(t_settings *set)
+time_t	fill_now_print(t_settings *set)
 {
 	struct timeval	tv;
 

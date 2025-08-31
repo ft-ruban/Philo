@@ -6,14 +6,15 @@
 /*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 13:23:13 by ldevoude          #+#    #+#             */
-/*   Updated: 2025/08/30 15:38:42 by ldevoude         ###   ########lyon.fr   */
+/*   Updated: 2025/08/31 10:43:24 by ldevoude         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 #include <unistd.h>
 
-// TODO complete all mutex (pastamutex for ex)
+// destroy mutex in our nodes philo and forks
+// i should be = to the nbr of nodes
 
 int	destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i)
 {
@@ -33,6 +34,8 @@ int	destroy_mutex_nodes(t_philo *philo, t_forks *forks, long i)
 	}
 	return (RETURN_SUCCESS);
 }
+
+// destroy mutex in set struct when something failed during exec.
 
 int	destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
 		long i)
@@ -56,6 +59,8 @@ int	destroy_mutex_fail(t_settings *settings, t_philo *philo, t_forks *forks,
 		return (RETURN_FAILURE);
 	return (RETURN_FAILURE);
 }
+
+// remove each structs if they exists
 
 int	free_structs(t_settings *set, t_philo *philo, t_forks *forks,
 		int return_value)
