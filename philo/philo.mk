@@ -2,17 +2,29 @@ override SRCSDIR	:= srcs/
 override SRCS		= $(addprefix $(SRCSDIR), $(SRC))
 
 override PARSERDIR := parsing/
+override EXECDIR := exec/
 
 SRC += $(addprefix $(MAINDIR), $(addsuffix .c, $(MAIN)))
 
 override MAIN := \
 	main \
-	debug \
-	philo \
+	setup_structs \
 	utils \
 
 SRC += $(addprefix $(PARSERDIR), $(addsuffix .c, $(PARSERSRC)))
 
 override PARSERSRC := \
+	parsing_error_msg \
 	parsing_utils \
 	parsing \
+
+
+SRC += $(addprefix $(EXECDIR), $(addsuffix .c, $(EXECSRC)))
+
+override EXECSRC := \
+	philo_monitor \
+	philo_routine_even \
+	philo_routine_odd \
+	philo_routine \
+	philo \
+	philo_utils

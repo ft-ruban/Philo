@@ -1,28 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldevoude <ldevoude@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/18 15:17:38 by ldevoude          #+#    #+#             */
+/*   Updated: 2025/08/30 16:00:33 by ldevoude         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 # define PARSING_H
 
-#include "philo.h"
-#include "stdbool.h"
-#include <sys/time.h> //gettingtimeofdayneedit 
+# include "philo.h"
+# include "stdbool.h"
+# include <sys/time.h> //gettingtimeofdayneedit
 
 # define RETURN_ERROR 1
 # define RETURN_SUCCESS 0
 # define INVALID_INPUT -42
+# define NO_MEAL -1
 
-typedef enum e_error_status 
+typedef enum e_error_status
 {
-  INVALID_ARGC = 2,
-  INVALID_PHILO,
-  INVALID_DIE,
-  INVALID_EAT,
-  INVALID_SLEEP,
-  INVALID_MAXMEAL,
-} t_error_status;
+	INVALID_ARGC = 2,
+	INVALID_PHILO,
+	INVALID_DIE,
+	INVALID_EAT,
+	INVALID_SLEEP,
+	INVALID_MAXMEAL,
+	INVALID_SLEEP_PLUS_EAT,
+	INVALID_NUM_VALUE,
+}		t_error_status;
 
-//parsing.c
-int     parsing(int argc, char *argv[], t_settings *set);
+// parsing_err_msg
+int		error_msg(int return_value);
 
-//parsing_utils.c
-double	ft_atol(const char *nptr);
+// parsing.c
+int		parsing(int argc, char *argv[], t_settings *set);
+
+// parsing_utils.c
+long	ft_atol(const char *nptr);
+size_t	ft_strlen(const char *s);
+int		ft_isnum(int c);
 
 #endif
